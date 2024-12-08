@@ -43,6 +43,20 @@ function BlogList() {
       author: 'Daniel Radcliffe',
       date: 'Nov 29, 2024',
     },
+    {
+      id:6,
+      image: 'https://bsmedia.business-standard.com/_media/bs/img/article/2024-03/18/full/1710780194-4451.jpg?im=FitAndFill=(826,465)',
+      title: 'Blinkit vs Instamart: Chasing a moving target in quick commerce race',
+      content: `Competition in the fast-growing quick commerce sector is heating up as Swiggy Instamart faces a tough challenge in narrowing the gap with Blinkit, which currently dominates the market.
+ 
+In the second quarter (Q2) of 2024-25 (FY25), Instamart's gross order value (GOV) rose by 42.1 per cent quarter-on-quarter (Q-o-Q) and 75.5 per cent year-on-year (Y-o-Y), reaching Rs 3,382 crore. Its adjusted earnings before interest, tax, depreciation, and amortisation (Ebitda) margin improved to minus 10.6 per cent, compared to minus 18.1 per cent Y-o-Y.
+ 
+In contrast, Blinkit reported a GOV of Rs 6,132 crore for the same period, showing 5 per cent Q-o-Q and 122 per cent Y-o-Y growth, despite operating at a larger scale. Blinkit has been contribution-positive since Q2 of 2023-24, while Instamart's contribution margin stood at minus 1.9 per cent of GOV in Q2FY25.
+
+Instamart's GOV growth has not led to sizeable margin gains, as higher marketing and employee expenses offset improvements from reduced contribution margin losses. Analysts note that while Swiggy's dark store network is seeing improved order density, Blinkit has achieved better unit economics at a comparable scale.`,
+      author:`Krish Shaw`,
+      date: 'Nov 29, 2024',
+    },
   ];
   return (
     <div id='blogs'>
