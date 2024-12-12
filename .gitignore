@@ -1,0 +1,7 @@
+#.gitignore
+
+.env
+
+node_module
+
+db.js
