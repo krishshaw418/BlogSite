@@ -14,3 +14,4 @@ Styling: Tailwind CSS for a responsive and customizable design.
 Routing: React Router for smooth and efficient navigation.
 
 Whether you’re looking for inspiration, knowledge, or a community of like-minded innovators, The Entrepreneurial Horizon is your destination to dream big, learn, and grow.
+Do Checkout: ecellnita.in/blogs
