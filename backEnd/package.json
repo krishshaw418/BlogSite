@@ -1,5 +1,5 @@
 {
-  "name": "ecell_blog_site_backend",
+  "name": "backend",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -13,6 +13,9 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "mongoose": "^8.8.4"
+    "install": "^0.13.0",
+    "mongoose": "^8.8.4",
+    "npm": "^10.9.2",
+    "uuid": "^11.0.3"
   }
 }

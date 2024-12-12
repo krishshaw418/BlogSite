@@ -2,9 +2,8 @@
 
 .env
 
-node_module
+database.js
 
-db.js
 =======
 # Logs
 logs

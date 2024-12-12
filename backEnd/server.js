@@ -7,7 +7,7 @@ const { v4: uuidv4 } = require('uuid');
 app.use(cors());
 app.use(express.json());
 
-const BlogPost = require('./db.js');
+const BlogPost = require('./db');
 
 app.post(`/post`, async(req,res)=>{
     const {heading, author, dateOfPublish, image, content} = req.body;
