@@ -1,0 +1,34 @@
+.blog-title {
+    font-size: 3.5rem;
+    font-weight: bold;
+    color: white;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .blog-author {
+    font-size: 0.875rem; 
+    color: whitesmoke;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .blog-content {
+    font-size: 1.125rem; /* Larger text */
+    line-height: 1.75rem; /* Line height */
+    color: white; /* Dark gray */
+  }
+
+/* Example styling in BlogPage.css */
+h2 {
+  font-size: 1.75rem;
+  font-weight: bold;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
