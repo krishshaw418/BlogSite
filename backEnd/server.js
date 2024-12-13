@@ -9,6 +9,7 @@ app.use(express.json());
 
 const BlogPost = require('./db');
 
+//Api for posting blog content
 app.post(`/post`, async(req,res)=>{
     const {heading, author, dateOfPublish, image, content} = req.body;
     const postId = uuidv4();
@@ -30,6 +31,9 @@ app.post(`/post`, async(req,res)=>{
     }
 })
 
+//Api for getting all blogs
+
+//Api for getiing specific blog content
 app.get(`/post/:uid`, async(req,res)=>{
     const {uid} = req.params;
     try {
@@ -49,43 +53,10 @@ app.get(`/post/:uid`, async(req,res)=>{
     }
 })
 
-// app.get(`/post/likes/:uid`, async(req,res)=>{
-//     const {uid} = req.params;
-//     try {
-//         const post = await BlogPost.findOne({uid});
-//         if(!post){
-//             return res.json({message:"post not found!"});
-//         }
-
-//         // const d = new Date(post.dateOfPublish);
-//         // const day = String(d.getDate()).padStart(2, "0");
-//         // const month = String(d.getMonth() + 1).padStart(2, "0");
-//         // const year = d.getFullYear();
-//         res.json(post.likes);
-//     } catch (error) {
-//         console.error("Error fetching the blog post:", error);
-//         res.json({ error: "Failed to fetch the blog post" });
-//     }
-// })
-
-// app.put(`/post/like/:uid`, async(req,res)=>{
-//     const {uid} = req.params;
-//     try {
-//         const post = await BlogPost.findOneAndUpdate(
-//             {uid},
-//             { $inc: { likes: 1 } },
-//             {new:true}
-//         );
-//         res.json({ likes: post.likes });   
-//     } catch (error) {
-//         console.log("Error:",error);
-//         res.json({ error: "Failed to update likes" });
-//     }
-// })
-
+//Api for likes count
 app.put('/post/like/:uid', async (req, res) => {
     const { uid } = req.params;
-    const { like } = req.body; // 'like' will be true to increment, false to decrement
+    const { like } = req.body;
     try {
         if (like === undefined) {
             return res.status(400).json({ error: "Like status (true/false) is required." });
@@ -107,30 +78,6 @@ app.put('/post/like/:uid', async (req, res) => {
         res.status(500).json({ error: "Failed to update likes" });
     }
 });
-
-
-// app.get(`/likes/:id`, async(req,res)=>{
-//     try {
-//         const post = await likes.findOne({ id: req.params.id });
-//         if (!post) return res.status(404).json({ likes: 0 }); // Return 0 if the post doesn't exist
-//         res.json({ likes: post.likes });
-//       } catch (err) {
-//         res.status(500).json({ error: "Failed to fetch likes" });
-//       }
-// })
-
-// app.post("/liked/:id", async (req, res) => {
-//     try {
-//       const post = await likes.findOneAndUpdate(
-//         { id: req.params.id },
-//         { $inc: { likes: 1 } },
-//         { new: true, upsert: true } // Create the document if it doesn't exist
-//       );
-//       res.json({ likes: post.likes });
-//     } catch (err) {
-//       res.status(500).json({ error: "Failed to update likes" });
-//     }
-//   });
 
 app.listen(port,()=>{
     console.log(`Listening at port: ${port}`);

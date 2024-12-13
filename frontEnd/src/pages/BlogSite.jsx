@@ -7,7 +7,7 @@ import Section2 from '../components/Section2'
 import Section3 from '../components/Section3'
 import ScrollToTopButton from '../components/ScrollToTopButton';
 
-function App() {
+function BlogSite() {
   return (
     <div >
     <Header/>
@@ -21,4 +21,4 @@ function App() {
   )
 }
 
-export default App
+export default BlogSite
