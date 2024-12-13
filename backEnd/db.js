@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-require('dotenv').config();
+require('dotenv').config({path:`../.env`});
 const uri = process.env.MONGO_URI;
 
 const blogPostSchema = new mongoose.Schema({
@@ -9,12 +9,12 @@ const blogPostSchema = new mongoose.Schema({
   },
   heading: {
     type: String,
-    required: true, // Heading is mandatory
-    trim: true, // Removes whitespace around the string
+    required: true,
+    trim: true,
   },
   author: {
     type: String,
-    required: true, // Author is mandatory
+    required: true,
     trim: true,
   },
   dateOfPublish: {
@@ -22,26 +22,25 @@ const blogPostSchema = new mongoose.Schema({
     default: Date.now,
   },
   image: {
-    type: String, // URL or file path of the image
-    required: false, // Image is not mandatory
+    type: String, 
+    required: false, 
   },
   content: {
     type: String,
-    required: true, // Blog content is mandatory
+    required: true, 
   },
   likes: {
     type: Number,
-    default: 0, // Starts with 0 likes
-    min: 0, // Prevent negative likes
+    default: 0, 
+    min: 0,
   },
   views: {
     type: Number,
-    default: 0, // Starts with 0 views
-    min: 0, // Prevent negative views
+    default: 0,
+    min: 0,
   },
 });
 
-// Create the BlogPost model
 const BlogPost = mongoose.model("BlogPost", blogPostSchema);
 
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
