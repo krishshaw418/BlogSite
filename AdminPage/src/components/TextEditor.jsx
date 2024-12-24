@@ -6,10 +6,17 @@ const TextEditor = () => {
   const [content, setContent] = useState('');
   const [heading, setHeading] = useState('');
   const [author, setAuthor] = useState('');
-  const [image, setImage] = useState('');
+  const [image, setImage] = useState(null);
 
   const handleContentChange = (value) => {
     setContent(value); // Update the editor content
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0]; // Get the first selected file
+    if (file) {
+      setImage(file);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -18,12 +25,11 @@ const TextEditor = () => {
     const blogData = {
       heading,
       author,
-      image,
       content,
     };
 
     try {
-      const response = await fetch('http://localhost:3000/post', {
+      const response1 = await fetch('http://localhost:3000/post', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -31,14 +37,23 @@ const TextEditor = () => {
         body: JSON.stringify(blogData),
       });
 
-      if (response.ok) {
-        const result = await response.json();
+      const formData = new FormData();
+      formData.append('image', image);
+
+      const response2 = await fetch('http://localhost:3000/images', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response1.ok && response2.ok) {
+        const result1 = await response1.json();
+        const result2 = await response2.json();
         alert('Blog post submitted successfully!');
         // Reset form
         setHeading('');
         setAuthor('');
-        setImage('');
         setContent('');
+        setImage(null);
       } else {
         throw new Error('Failed to submit the blog post');
       }
@@ -84,15 +99,15 @@ const TextEditor = () => {
 
         <div>
           <label htmlFor="image" className="block font-semibold mb-1">
-            Image URL:
+            Upload Image:
           </label>
           <input
-            type="url"
+            type="file"
             id="image"
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
-            className="w-full border px-3 py-2 rounded text-black"
-            placeholder="Enter image url"
+            // value={image}
+            onChange={(e) => handleFileChange(e)}
+            className="w-full border px-3 py-2 rounded text-white"
+            accept="image/*"
             required
           />
         </div>
