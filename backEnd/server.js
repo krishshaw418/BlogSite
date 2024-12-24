@@ -4,49 +4,32 @@ const port = 3000;
 const cors = require('cors');
 const { v4: uuidv4 } = require('uuid');
 const multer = require('multer');
-const { GridFsStorage } = require('multer-gridfs-storage');
 app.use(cors());
 app.use(express.json());
 const BlogPost = require('./db');
+const {uploadFile} = require('./s3');
+const upload = multer({ dest: 'uploads/' });
 require('dotenv').config({path:`../.env`});
 const uri = process.env.MONGO_URI;
 
-const storage = new GridFsStorage({
-    url: uri,
-    file: (req, file) => {
-      return {
-        filename: `${Date.now()}-${file.originalname}`,
-        bucketName: 'Images',
-      };
-    },
-  });
-
-const upload = multer({ storage });
-
-//Api for image upload in database
-app.post('/images', upload.single('file'), (req, res) => {
-    if (!req.file) {
-      return res.json({message:'No file uploaded'});
-    }
-    res.json({
-        fileId: req.file.id,
-        filename: req.file.filename,
-        message: 'File uploaded successfully!',
-    });
-  });
+//Api for image upload in AWS S3
+app.post('/images', upload.single('image'), async(req, res) => {
+    const file = req.file;
+    const result = await uploadFile(file);
+    // res.json({ imageUrl: result.Location });
+});
 
 //Api for posting blog content
 app.post(`/post`, async(req,res)=>{
-    const {heading, author, dateOfPublish, image, content} = req.body;
+    const {heading, author, dateOfPublish, content} = req.body;
     const postId = uuidv4();
-    console.log(postId);
+    // console.log(postId);
     try {
         const newBlogPost = new BlogPost({
             uid:postId,
             heading:heading,
             author:author,
             dateOfPublish:dateOfPublish,
-            image:image,
             content:content
         });
         await newBlogPost.save();
