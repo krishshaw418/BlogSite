@@ -21,4 +21,12 @@ function uploadFile(file){
     return s3.upload(uploadParams).promise();
 }
 
-module.exports = {uploadFile};
+function getFile(key){
+    const downloadParams = {
+        Key: key,
+        Bucket: bucketName,
+    }
+    return s3.getObject(downloadParams).createReadStream();
+}
+
+module.exports = {uploadFile, getFile};

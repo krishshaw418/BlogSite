@@ -7,7 +7,7 @@ const TextEditor = () => {
   const [heading, setHeading] = useState('');
   const [author, setAuthor] = useState('');
   const [image, setImage] = useState(null);
-
+  const [loading, setLoading] = useState(false);
   const handleContentChange = (value) => {
     setContent(value); // Update the editor content
   };
@@ -22,21 +22,15 @@ const TextEditor = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const blogData = {
-      heading,
-      author,
-      content,
-    };
+    if (loading) return; // Prevent duplicate submissions
+    setLoading(true); // Set loading to true when submission starts
+    // const blogData = {
+    //   heading,
+    //   author,
+    //   content,
+    // };
 
     try {
-      const response1 = await fetch('http://localhost:3000/post', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(blogData),
-      });
-
       const formData = new FormData();
       formData.append('image', image);
 
@@ -45,21 +39,39 @@ const TextEditor = () => {
         body: formData,
       });
 
-      if (response1.ok && response2.ok) {
-        const result1 = await response1.json();
+      if(response2.ok){
         const result2 = await response2.json();
-        alert('Blog post submitted successfully!');
-        // Reset form
-        setHeading('');
-        setAuthor('');
-        setContent('');
-        setImage(null);
-      } else {
+        const blogData = {
+          heading,
+          author,
+          content,
+          image:result2.key
+        };
+        const response1 = await fetch('http://localhost:3000/post', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(blogData),
+        });
+
+        if(response1.ok){
+          const result1 = await response1.json();
+          alert('Blog post submitted successfully!');
+          setHeading('');
+          setAuthor('');
+          setContent('');
+          setImage(null);
+        }
+      }
+      else{
         throw new Error('Failed to submit the blog post');
       }
     } catch (error) {
       console.error('Error:', error);
       alert('Error submitting the blog post. Please try again.');
+    } finally{
+      setLoading(false);
     }
   };
 
@@ -124,7 +136,10 @@ const TextEditor = () => {
 
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+          disabled={loading}
+          className={`w-full py-2 px-4 rounded ${
+            loading ? 'bg-gray-500 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'
+          } text-white`}
         >
           Upload
         </button>
