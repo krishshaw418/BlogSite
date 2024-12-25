@@ -28,7 +28,6 @@ app.post('/images', upload.single('image'), async(req, res) => {
 app.post(`/post`, async(req,res)=>{
     const {heading, image, author, dateOfPublish, content} = req.body;
     const postId = uuidv4();
-    // console.log(postId);
     try {
         const newBlogPost = new BlogPost({
             uid:postId,
@@ -47,7 +46,6 @@ app.post(`/post`, async(req,res)=>{
 })
 
 //Api for getting all blogs
-
 app.get(`/posts`, async(req,res)=>{
     try {
         const posts = await BlogPost.find();
@@ -86,7 +84,7 @@ app.get(`/images/:key`, async(req,res)=>{
     result.pipe(res);
 })
 
-//Api for likes count
+//Api for likes count of a blog
 app.put('/post/like/:uid', async (req, res) => {
     const { uid } = req.params;
     const { like } = req.body;
