@@ -2,11 +2,11 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Likes from './Likes';
 
-const BlogCard = ({id, image, title, content='', author, date }) => {
+const BlogCard = ({uid, image, title, content, author, date }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/blog/${id}`);
+    navigate(`/blog/${uid}`);
   };
 
   const truncatedContent = content.length > 150 ? `${content.substring(0, 150)}...` : content;
@@ -21,19 +21,12 @@ const BlogCard = ({id, image, title, content='', author, date }) => {
       />
       <div className="p-4">
         <h2 className="text-xl font-bold text-gray-800 mb-2">{title}</h2>
-        {/* <p className="text-gray-600 text-sm mb-4">
-          {content.length > 100 ? `${content.substring(0, 100)}...` : content}
-        </p> */}
-        {/* <div
-          className="text-gray-600 text-sm mb-4"
-          dangerouslySetInnerHTML={{ __html: content }}
-        /> */}
         <div
           className="text-gray-600 text-sm mb-4"
           dangerouslySetInnerHTML={{ __html: truncatedContent }}
         />
         <div className="flex flex-row items-center justify-between text-sm text-gray-500">
-          <Likes uid={id} />
+          <Likes uid={uid} />
           <span>By: <span className="font-medium">{author}</span></span>
           <span>{date}</span>
         </div>

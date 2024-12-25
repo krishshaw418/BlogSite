@@ -2,139 +2,67 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Header from '../components/Header';
 import '../blogcss/BlogPage.css';
-
-function BlogPage() {
+const BlogPage = () => {
+  const [blog, setBlog] = useState(null);
+  const [loading, setLoading] = useState(true);
   const { uid } = useParams();
-  const [blog, setBlog] = useState({});
-  const [formattedDate, setFormattedDate] = useState('');
-
-  // Function to format the date
-  const formatDate = (isoDate) => {
-    const d = new Date(isoDate);
-    const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    const dayOfWeek = daysOfWeek[d.getDay()];
-
-    const day = d.getDate();
-    const daySuffix = (day) => {
-      if (day > 3 && day < 21) return `${day}th`; // for 4th to 20th, use 'th'
-      switch (day % 10) {
-        case 1:
-          return `${day}st`;
-        case 2:
-          return `${day}nd`;
-        case 3:
-          return `${day}rd`;
-        default:
-          return `${day}th`;
+  useEffect(() => {
+    const fetchBlogData = async () => {
+      try {
+        const blogResponse = await fetch(`http://localhost:3000/post/${uid}`,{
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        if (!blogResponse.ok) {
+          throw new Error('Failed to fetch blog data');
+        }
+        const blogData = await blogResponse.json();
+        setBlog(blogData.post);
+      } catch (error) {
+        console.error('Error fetching blog data:', error);
+      } finally {
+        setLoading(false);
       }
     };
-    const dayWithSuffix = daySuffix(day);
 
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    const month = months[d.getMonth()];
+    fetchBlogData();
+  }, []);
 
-    const year = d.getFullYear();
+  if (loading) {
+    return <div className="text-center text-lg font-medium">Loading...</div>;
+  }
 
-    return `${dayOfWeek}, ${dayWithSuffix} ${month}, ${year}`;
-  };
+  if (!blog) {
+    return <div className="text-center text-lg text-red-500">Error loading blog content.</div>;
+  }
 
-  const getBlog = async () => {
-    try {
-      const response = await fetch(`http://localhost:3000/post/${uid}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+  const { heading, author, dateOfPublish, content, image } = blog;
 
-      if (response.ok) {
-        const data = await response.json();
-        setBlog(data.post);
-        setFormattedDate(formatDate(data.post.dateOfPublish)); // Set the formatted date
-      }
-    } catch (error) {
-      console.error('Error fetching blog:', error);
-    }
-  };
-
-  useEffect(() => {
-    getBlog();
-  }, [uid]);
+  // Format date
+  const formattedDate = new Date(dateOfPublish).toLocaleDateString('en-US', {
+    weekday: 'short',
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
 
   return (
     <div>
-      <Header />
-      <div className="max-w-4xl mx-auto p-6">
-        <h1 className="text-6xl font-bold mb-4 text-white flex justify-center">{blog.heading}</h1>
-        <div className="text-sm text-white flex justify-center mb-6">
-          By <span className="font-medium text-white"> {blog.author} </span> | Published on {formattedDate}
-        </div>
-        {/* Author and Date */}
+      <Header/>
+      <h1 className="blog-title">{heading}</h1>
+      <p className="blog-author  p-3"> By <span className='px-1 font-bold'>{author}</span> | Published on {formattedDate} </p>
+      {image && (
         <img
-          src={`http://localhost:3000/images/${blog.image}`}
-          alt={blog.heading}
-          className="w-full h-auto rounded-lg shadow-md mb-6"
+          src={`http://localhost:3000/images/${image}`}
+          alt={heading}
+          className="blog-image"
         />
-        <p className="font-serif font-normal text-white text-lg leading-relaxed">{blog.content}</p>
-      </div>
+      )}
+      <div className="text-white leading-relaxed text-base m-5 p-5" dangerouslySetInnerHTML={{ __html: content }} />
     </div>
   );
-}
+};
 
 export default BlogPage;
-
-
-// import React, {useState, useEffect } from 'react';
-// import { useParams } from 'react-router-dom';
-// import Header from '../components/Header';
-// import '../blogcss/BlogPage.css'
-
-// function BlogPage() {
-//   const { uid } = useParams();
-//   useEffect(() => {
-//     window.scrollTo(0, 0);
-//   }, []);
-
-//   const [blog, setBlog] = React.useState({});
-//   const [date, setDate] = useState('');
-//   const getBlog = async () => {
-//     try {
-//       const response = await fetch(`http://localhost:3000/post/${uid}`,{
-//         method: 'GET',
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//       })
-//       if(response.ok){
-//         const data = await response.json();
-//         setBlog(data.post);
-//         setDate(data.post.dateOfPublish);
-//       }
-//     } catch (error) {
-//       console.error('Error fetching blog:', error);
-//     }
-//   }
-//   useEffect(() => {
-//     getBlog();
-//   }, [uid]);
-
-//   return (
-//     <div>
-//     <Header/>
-//     <div className="max-w-4xl mx-auto p-6">
-//     <h1 className="text-6xl font-bold mb-4 text-white flex justify-center">{blog.heading}</h1> 
-//     <div className="text-sm text-white flex justify-center mb-6">
-//     By <span className="font-medium text-white"> {blog.author} </span> | Published on {date}
-//     </div> {/* Author and Date */}
-//     <img
-//     src={`http://localhost:3000/images/${blog.image}`}
-//     alt={blog.heading}
-//     className="w-full h-auto rounded-lg shadow-md mb-6"
-//   />
-//   <p className="font-serif font-normal text-white text-lg leading-relaxed">{blog.content}</p>
-// </div>
-//     </div>
-//   );
-// }
-
-// export default BlogPage;
