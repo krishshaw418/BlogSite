@@ -25,6 +25,8 @@ function Likes({uid}) {
 
       const handleLike = async () => {
         try {
+          setLikes((prevLikes) => (liked ? prevLikes - 1 : prevLikes + 1));
+          setLiked(!liked);
           const response = await fetch(`http://localhost:3000/post/like/${uid}`, {
             method: "PUT",
             headers: {
