@@ -9,7 +9,7 @@ function Header() {
         <img src={logoWhite} className="w-[80px] p-2" alt="Logo" />
         <div className='container'>
         <ul className="text-white flex justify-center gap-4 md:gap-14">
-          <a href="https://www.ecellnita.in/">
+          <a href="/">
             <li className="hover:font-bold cursor-pointer">Home</li>
           </a>
           <a href="#about">

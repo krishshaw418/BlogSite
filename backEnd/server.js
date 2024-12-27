@@ -20,7 +20,6 @@ app.post('/images', upload.single('image'), async(req, res) => {
     const file = req.file;
     const result = await uploadFile(file);
     await unLinkFile(file.path);
-    console.log(result.key);
     res.json({ key: result.key });
 });
 

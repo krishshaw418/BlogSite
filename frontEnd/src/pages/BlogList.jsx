@@ -56,12 +56,12 @@ function BlogList() {
   
 
   return (
-    <div id='blogs'>
+    <div id='blogs' className="px-4 sm:px-6 lg:px-8">
       <div className='flex justify-center gap-3'>
       <h1 className='text-white text-4xl sm:text-5xl md:text-6xl font-bold mb-6'>Our</h1>
       <h1 className='text-pink-500 text-4xl sm:text-5xl md:text-6xl font-bold mb-6'>Blogs</h1>
       </div>
-      <div className="container mx-auto p-4 grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+      <div className="container mx-auto p-4 grid gap-4 grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
       {blogs.map((blog) => (
         <BlogCard
           key={blog.uid}
