@@ -16,7 +16,7 @@ function Section1() {
   </div>
   <h2 className='text-white text-3xl text-center font-serif leading-relaxed max-w-screen-lg mx-auto p-4'>"Inspiring Ideas, Stories, and Strategies for Tomorrow's Leaders."</h2>
   <p className=" text-white text-lg text-center font-serif leading-relaxed max-w-screen-lg mx-auto p-4">
-  The Entrepreneurial Horizon is your gateway to exploring the limitless possibilities of innovation and enterprise. With a focus on inspiring stories, insightful analyses, and actionable advice, this blog captures the essence of entrepreneurship in a dynamic world. Whether you're a budding visionary or a seasoned leader, *The Entrepreneurial Horizon* offers a platform to navigate challenges, celebrate successes, and envision the future of business with clarity and purpose.
+  The Entrepreneurial Horizon is your gateway to exploring the limitless possibilities of innovation and enterprise. With a focus on inspiring stories, insightful analyses, and actionable advice, this blog captures the essence of entrepreneurship in a dynamic world. Whether you're a budding visionary or a seasoned leader, The Entrepreneurial Horizon offers a platform to navigate challenges, celebrate successes, and envision the future of business with clarity and purpose.
   </p>
 </div>
 
