@@ -59,10 +59,13 @@ function Likes({uid}) {
   <svg
     xmlns="http://www.w3.org/2000/svg"
     className="h-5 w-5"
-    fill={liked ? "currentColor" : "none"} 
+    fill={liked ? "rgb(236, 72, 222)" : "none"} 
     stroke="currentColor"
     strokeWidth={2}
     viewBox="0 0 24 24"
+    style={{
+      filter: liked ? "drop-shadow(0 0 8px rgb(236, 72, 222))" : "none",
+    }}
   >
     <path
       strokeLinecap="round"
@@ -71,7 +74,7 @@ function Likes({uid}) {
     />
   </svg>
 </button>
-      <p className="text-lg font-medium text-black">{likes}</p>
+      <p className="text-lg font-medium">{likes}</p>
     </div>
   )
 }
