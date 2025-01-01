@@ -10,12 +10,11 @@ const unLinkFile = util.promisify(fs.unlink);
 app.use(cors());
 app.use(express.json());
 const BlogPost = require('./db');
-const {uploadFile, getFile} = require('./s3');
+const {uploadFile, getFile, deleteFile} = require('./s3');
 const upload = multer({ dest: 'uploads/' });
 require('dotenv').config({path:`../.env`});
-const uri = process.env.MONGO_URI;
 
-//Api for image upload in AWS S3
+//Api for image upload in the S3 bucket
 app.post('/images', upload.single('image'), async(req, res) => {
     const file = req.file;
     const result = await uploadFile(file);
@@ -42,7 +41,7 @@ app.post(`/post`, async(req,res)=>{
         console.log(`Upload failed!`, error);
         res.json({message:"Upload Falied!"});
     }
-})
+});
 
 //Api for getting all blogs
 app.get(`/posts`, async(req,res)=>{
@@ -74,13 +73,34 @@ app.get(`/post/:uid`, async(req,res)=>{
         console.error("Error fetching the blog post:", error);
         res.json({ error: "Failed to fetch the blog post" });
     }
-})
+});
 
 //Api for getting specific blog image
 app.get(`/images/:key`, async(req,res)=>{
     const {key} = req.params;
     const result = await getFile(key);
     result.pipe(res);
+});
+
+//Api for deleting a blog post
+app.delete(`/post/:key`, async(req,res)=>{
+    const {key} = req.params;
+    await deleteFile(key);
+    await BlogPost.findOneAndDelete({image:key});
+    res.json({message:"Post Deleted Successfully!"});
+});
+
+//Api for updating a blog post
+app.put(`/post/:uid`, async(req,res)=>{
+    const {uid} = req.params;
+    const {heading, image, author, dateOfPublish, content} = req.body;
+    try {
+        await BlogPost.findOneAndUpdate({uid},{heading, image, author, dateOfPublish, content},{new:true});
+        res.json({message:"Post Updated Successfully!"});
+    } catch (error) {
+        console.log(`Update failed!`, error);
+        res.json({message:"Update Falied!"});
+    }
 })
 
 //Api for likes count of a blog
@@ -111,4 +131,4 @@ app.put('/post/like/:uid', async (req, res) => {
 
 app.listen(port,()=>{
     console.log(`Listening at port: ${port}`);
-})
+});
