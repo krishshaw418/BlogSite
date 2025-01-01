@@ -60,11 +60,11 @@ function Likes({uid}) {
     xmlns="http://www.w3.org/2000/svg"
     className="h-5 w-5"
     fill={liked ? "rgb(236, 72, 222)" : "none"} 
-    stroke="currentColor"
+    stroke="rgb(236, 72, 222)"
     strokeWidth={2}
     viewBox="0 0 24 24"
     style={{
-      filter: liked ? "drop-shadow(0 0 8px rgb(236, 72, 222))" : "none",
+      filter: liked ? "drop-shadow(0 0 15px rgb(236, 72, 222))" : "none",
     }}
   >
     <path
