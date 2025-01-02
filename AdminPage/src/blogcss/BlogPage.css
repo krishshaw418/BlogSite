@@ -1,0 +1,44 @@
+.preview-window {
+  background-color: rgb(2, 6, 34) !important;
+}
+
+.blog-title {
+  font-size: 3.5rem;
+  font-weight: bold;
+  color: white;
+  display: flex;
+  justify-content: center;
+}
+
+.blog-author {
+  font-size: 0.875rem;
+  color: whitesmoke;
+  display: flex;
+  justify-content: center;
+}
+
+.blog-image {
+  width: 100%; /* Ensures the image adjusts to the container */
+  max-width: 700px; /* Limits the width for larger screens */
+  height: auto; /* Maintains aspect ratio */
+  object-fit: cover;
+  display: block;
+  margin: 0 auto; /* Centers the image */
+  border-radius: 15px;
+  padding: 1rem; /* Adds standard padding */
+  box-sizing: border-box; /* Includes padding in the width/height */
+}
+
+@media (max-width: 768px) {
+  .blog-image {
+    max-width: 90%; /* Shrinks width for smaller screens */
+    padding: 0.5rem; /* Adjust padding */
+  }
+}
+
+@media (max-width: 480px) {
+  .blog-image {
+    max-width: 90%; /* Takes full width for very small screens */
+    padding: 0.25rem; /* Minimal padding */
+  }
+}
