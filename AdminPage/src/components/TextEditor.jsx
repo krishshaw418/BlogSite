@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css'; // Import styles
+import { useNavigate } from 'react-router-dom';
+import '../blogcss/BlogPage.css';
+import 'react-quill/dist/quill.snow.css';
 
 const TextEditor = () => {
   const [content, setContent] = useState('');
@@ -8,27 +10,39 @@ const TextEditor = () => {
   const [author, setAuthor] = useState('');
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [window, setWindow] = useState(false);
+
   const handleContentChange = (value) => {
-    setContent(value); // Update the editor content
+    setContent(value);
   };
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0]; // Get the first selected file
+    const file = e.target.files[0];
     if (file) {
       setImage(file);
     }
   };
+
+  const handlePreview = ()=>{
+    setWindow(true);
+  }
+
+  const handleClosePreview = () => {
+    setWindow(false);
+  }
+
+  const formattedDate = new Date(Date.now()).toLocaleDateString('en-US', {
+    weekday: 'short',
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (loading) return; // Prevent duplicate submissions
     setLoading(true); // Set loading to true when submission starts
-    // const blogData = {
-    //   heading,
-    //   author,
-    //   content,
-    // };
 
     try {
       const formData = new FormData();
@@ -76,9 +90,10 @@ const TextEditor = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto mt-10 p-4 border rounded shadow text-white">
-      <h1 className="text-2xl font-bold mb-4">Create a Blog Post</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="bg-gray-200 min-h-screen p-8">
+     <div className= "max-w-2xl mx-auto bg-white p-6 rounded shadow">
+     <h1 className="text-2xl font-bold mb-4">Create a Blog Post</h1>
+      <form onSubmit={handleSubmit} className="space-y-4 text-black">
         <div>
           <label htmlFor="title" className="block font-semibold mb-1">
             Blog Title:
@@ -116,9 +131,8 @@ const TextEditor = () => {
           <input
             type="file"
             id="image"
-            // value={image}
             onChange={(e) => handleFileChange(e)}
-            className="w-full border px-3 py-2 rounded text-white"
+            className="w-full border px-3 py-2 rounded text-black"
             accept="image/*"
             required
           />
@@ -133,18 +147,54 @@ const TextEditor = () => {
             placeholder="Write your blog content here..."
           />
         </div>
-
-        <button
-          type="submit"
-          disabled={loading}
-          className={`w-full py-2 px-4 rounded ${
-            loading ? 'bg-gray-500 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'
-          } text-white`}
-        >
-          Upload
-        </button>
+        <div className="flex justify-center space-x-4">
+          <button
+            type="button"
+            onClick={handlePreview}
+            className="py-2 px-4 rounded bg-green-500 hover:bg-green-600 text-white"
+          >
+            Preview
+          </button>
+          <button
+            type="submit"
+            disabled={loading}
+            className={`py-2 px-4 rounded ${
+              loading ? 'bg-gray-500 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'
+            } text-white`}
+          >
+            Upload
+          </button>
+        </div>
       </form>
-    </div>
+     </div>
+
+     <div
+        className={`fixed top-0 right-0 h-full transform transition-transform duration-300 ${
+          window ? 'translate-x-0' : 'translate-x-full'
+        } w-1/2 preview-window p-4`}
+      >
+        <button
+          onClick={handleClosePreview}
+          className="absolute top-4 right-4 text-white"
+        >
+          X
+        </button>
+        <div className="h-full overflow-auto">
+          <div className="p-4">
+            <h1 className="blog-title">{heading}</h1>
+            <p className="blog-author  p-3"> By <span className='px-1 font-bold'>{author}</span> | Published on {formattedDate} </p>
+            {image && (
+              <img
+                src={URL.createObjectURL(image)}
+                alt={heading}
+                className="blog-image"
+              />
+            )}
+            <div className="text-white leading-relaxed text-base m-5 p-5" dangerouslySetInnerHTML={{ __html: content }} />
+          </div>
+        </div>
+      </div>
+     </div>
   );
 };
 
