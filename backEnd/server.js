@@ -1,6 +1,5 @@
 const express = require ('express');
 const app = express();
-const port = 3000;
 const cors = require('cors');
 const { v4: uuidv4 } = require('uuid');
 const multer = require('multer');
@@ -9,10 +8,11 @@ const util = require('util');
 const unLinkFile = util.promisify(fs.unlink);
 app.use(cors());
 app.use(express.json());
-const BlogPost = require('./db');
+const {BlogPost, AdminData} = require('./db');
 const {uploadFile, getFile, deleteFile} = require('./s3');
 const upload = multer({ dest: 'uploads/' });
 require('dotenv').config({path:`../.env`});
+const port = process.env.PORT;
 
 //Api for image upload in the S3 bucket
 app.post('/images', upload.single('image'), async(req, res) => {
@@ -90,19 +90,6 @@ app.delete(`/post/:key`, async(req,res)=>{
     res.json({message:"Post Deleted Successfully!"});
 });
 
-//Api for updating a blog post
-app.put(`/post/:uid`, async(req,res)=>{
-    const {uid} = req.params;
-    const {heading, image, author, dateOfPublish, content} = req.body;
-    try {
-        await BlogPost.findOneAndUpdate({uid},{heading, image, author, dateOfPublish, content},{new:true});
-        res.json({message:"Post Updated Successfully!"});
-    } catch (error) {
-        console.log(`Update failed!`, error);
-        res.json({message:"Update Falied!"});
-    }
-})
-
 //Api for likes count of a blog
 app.put('/post/like/:uid', async (req, res) => {
     const { uid } = req.params;
@@ -129,6 +116,33 @@ app.put('/post/like/:uid', async (req, res) => {
     }
 });
 
+//Api for updating number of views of a blog
+app.put(`/post/view/:uid`, async(req,res)=>{
+    const {uid} = req.params;
+    try {
+        const post = await BlogPost.findOne({uid});
+        if(!post){
+            return res.json({message:"post not found!"});
+        }
+        await BlogPost.updateOne({uid},{$inc:{views:1}});
+        return res.json({message:"Views updated successfully!"});
+    } catch (error) {
+        return res.json({message:"Failed to update views!"});
+    }
+})
+
+//Api for new admin singUp
+app.post(`/signUp`, async(req, res)=>{
+    const {name,email,password} = req.body;
+    try {
+        const newAdmin = new AdminData({name:name,email:email,password:password});
+        await newAdmin.save();
+        res.json({message:"Admin Created Successfully!"});
+    }catch (error) {
+        res.json({message:"Failed to create Admin!"}, error);
+    }
+})
+
 app.listen(port,()=>{
-    console.log(`Listening at port: ${port}`);
+    console.log(`Listening....`);
 });

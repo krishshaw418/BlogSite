@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import ReactQuill from 'react-quill';
-import { useNavigate } from 'react-router-dom';
+// require('dotenv').config();
 import '../blogcss/BlogPage.css';
 import 'react-quill/dist/quill.snow.css';
 
+// const port = process.env.REACT_APP_PORT;
 const TextEditor = () => {
   const [content, setContent] = useState('');
   const [heading, setHeading] = useState('');
@@ -48,7 +49,7 @@ const TextEditor = () => {
       const formData = new FormData();
       formData.append('image', image);
 
-      const response2 = await fetch('http://localhost:3000/images', {
+      const response2 = await fetch(`http://localhost:5000/images`, {
         method: 'POST',
         body: formData,
       });
@@ -61,7 +62,7 @@ const TextEditor = () => {
           content,
           image:result2.key
         };
-        const response1 = await fetch('http://localhost:3000/post', {
+        const response1 = await fetch(`http://localhost:5000/post`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -183,6 +184,7 @@ const TextEditor = () => {
           <div className="p-4">
             <h1 className="blog-title">{heading}</h1>
             <p className="blog-author  p-3"> By <span className='px-1 font-bold'>{author}</span> | Published on {formattedDate} </p>
+            <div className='blog-container'>
             {image && (
               <img
                 src={URL.createObjectURL(image)}
@@ -191,6 +193,7 @@ const TextEditor = () => {
               />
             )}
             <div className="text-white leading-relaxed text-base m-5 p-5" dangerouslySetInnerHTML={{ __html: content }} />
+            </div>
           </div>
         </div>
       </div>

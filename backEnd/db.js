@@ -43,8 +43,28 @@ const blogPostSchema = new mongoose.Schema({
 
 const BlogPost = mongoose.model("BlogPost", blogPostSchema);
 
+const AdminDataSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  }
+}) 
+
+const AdminData = mongoose.model("AdminData", AdminDataSchema);
+
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected'))
   .catch((err) => console.error('MongoDB connection error:', err));
   
-module.exports = BlogPost;
+module.exports = {BlogPost, AdminData};
