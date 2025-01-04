@@ -1,13 +1,16 @@
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Admin from './pages/Admin';
+import SignUp from './pages/signUp';
+import AdminDashboard from './pages/AdminDashboard';
 // import BlogPostPreview from './components/BlogPostPreview';
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path='/' element={<Admin/>}></Route>
-        {/* <Route path='/preview' element={<BlogPostPreview/>}></Route> */}
+        <Route path='/' element={<SignUp/>}></Route>
+        <Route path='/admin' element={<Admin/>}></Route>
+        <Route path='/admin/dashboard' element={<AdminDashboard/>}></Route>
       </Routes>
     </Router>
   )

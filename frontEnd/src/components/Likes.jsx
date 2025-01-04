@@ -8,7 +8,7 @@ function Likes({uid}) {
     useEffect(() => {
         const fetchLikes = async () => {
           try {
-            const response = await fetch(`http://localhost:3000/post/${uid}`, {
+            const response = await fetch(`http://localhost:5000/post/${uid}`, {
               method: "GET",
             });
             if (!response.ok) throw new Error("Failed to fetch likes");
@@ -27,7 +27,7 @@ function Likes({uid}) {
         try {
           setLikes((prevLikes) => (liked ? prevLikes - 1 : prevLikes + 1));
           setLiked(!liked);
-          const response = await fetch(`http://localhost:3000/post/like/${uid}`, {
+          const response = await fetch(`http://localhost:5000/post/like/${uid}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json"

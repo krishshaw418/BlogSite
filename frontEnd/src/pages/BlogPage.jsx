@@ -9,7 +9,7 @@ const BlogPage = () => {
   useEffect(() => {
     const fetchBlogData = async () => {
       try {
-        const blogResponse = await fetch(`http://localhost:3000/post/${uid}`,{
+        const blogResponse = await fetch(`http://localhost:5000/post/${uid}`,{
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -51,16 +51,20 @@ const BlogPage = () => {
   return (
     <div>
       <Header/>
+      <div >
       <h1 className="blog-title">{heading}</h1>
       <p className="blog-author  p-3"> By <span className='px-1 font-bold'>{author}</span> | Published on {formattedDate} </p>
+      <div className="blog-container">
       {image && (
         <img
-          src={`http://localhost:3000/images/${image}`}
+          src={`http://localhost:5000/images/${image}`}
           alt={heading}
-          className="blog-image"
+          className='blog-image'
         />
       )}
       <div className="text-white leading-relaxed text-base m-5 p-5" dangerouslySetInnerHTML={{ __html: content }} />
+      </div>
+      </div>
     </div>
   );
 };
