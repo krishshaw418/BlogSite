@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Header from '../components/Header';
+import Views from '../components/Views';
 import '../blogcss/BlogPage.css';
 const BlogPage = () => {
   const [blog, setBlog] = useState(null);
@@ -53,7 +54,10 @@ const BlogPage = () => {
       <Header/>
       <div >
       <h1 className="blog-title">{heading}</h1>
-      <p className="blog-author  p-3"> By <span className='px-1 font-bold'>{author}</span> | Published on {formattedDate} </p>
+      <div className="blog-author gap-2 p-3 items-center">
+      <p> By <span className='px-1 font-bold'>{author}</span> | Published on {formattedDate}</p>
+      <Views uid={uid}/>
+      </div>
       <div className="blog-container">
       {image && (
         <img

@@ -3,6 +3,7 @@ import Header from '../components/Header';
 import Graph from '../components/Graph';
 import PostList from '../components/PostList';
 function AdminDashboard() {
+  
     const blogData = {
         visits: [
           { date: "Jan", visits: 200 },
