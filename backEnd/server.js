@@ -125,7 +125,7 @@ app.put(`/post/view/:uid`, async(req,res)=>{
             return res.json({message:"post not found!"});
         }
         await BlogPost.updateOne({uid},{$inc:{views:1}});
-        return res.json({message:"Views updated successfully!"});
+        return res.json({post});
     } catch (error) {
         return res.json({message:"Failed to update views!"});
     }
