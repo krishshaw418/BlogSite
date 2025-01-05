@@ -24,18 +24,6 @@ ChartJS.register(
 );
 
 const Graph = ({ data }) => {
-  // Example Data
-  const visitsOverTime = {
-    labels: data?.visits?.map((item) => item.date) || ["Jan", "Feb", "Mar"],
-    datasets: [
-      {
-        label: "Website Visits",
-        data: data?.visits?.map((item) => item.visits) || [200, 300, 250],
-        borderColor: "rgba(75,192,192,1)",
-        backgroundColor: "rgba(75,192,192,0.2)",
-      },
-    ],
-  };
 
   const blogInteractions = {
     labels: data?.blogs?.map((blog) => blog.title) || ["Blog A", "Blog B", "Blog C"],
@@ -73,10 +61,10 @@ const Graph = ({ data }) => {
       minHeight: "100vh",
     }}
   >
-    <div style={{ width: "80%", maxWidth: "800px", marginBottom: "40px" }}>
+    {/* <div style={{ width: "80%", maxWidth: "800px", marginBottom: "40px" }}>
       <h3 style={{ textAlign: "center", marginBottom: "20px" }}>Number of Visits Over Time</h3>
       <Line data={visitsOverTime} />
-    </div>
+    </div> */}
 
     <div style={{ width: "80%", maxWidth: "800px", marginBottom: "40px" }}>
       <h3 style={{ textAlign: "center", marginBottom: "20px" }}>Overall Blog Interactions</h3>

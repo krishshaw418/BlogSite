@@ -63,12 +63,20 @@ const AdminDataSchema = new mongoose.Schema({
 
 const AdminData = mongoose.model("AdminData", AdminDataSchema);
 
-const VisitorsSchema = new mongoose.Schema({
-  
+const VisitorSchema = new mongoose.Schema({
+  visits:{
+    type: Number,
+  },
+  dateOfisit:{
+    type: Date,
+    default: Date.now
+  }
 })
+
+const Visitor = mongoose.model("Visitor", VisitorSchema);
 
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected'))
   .catch((err) => console.error('MongoDB connection error:', err));
   
-module.exports = {BlogPost, AdminData};
+module.exports = {BlogPost, AdminData, Visitor};

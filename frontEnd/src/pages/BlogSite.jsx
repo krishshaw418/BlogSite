@@ -1,4 +1,5 @@
 import React from 'react'
+import {useState, useEffect} from 'react'
 import Header from '../components/Header'
 import Section1 from '../components/Section1'
 import BlogList from '../pages/BlogList'
@@ -8,6 +9,7 @@ import Section3 from '../components/Section3'
 import ScrollToTopButton from '../components/ScrollToTopButton';
 
 function BlogSite() {
+  const [visitor, setVisitors] = useState(0);
   return (
     <div >
     <Header/>
