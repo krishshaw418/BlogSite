@@ -14,6 +14,8 @@ const upload = multer({ dest: 'uploads/' });
 require('dotenv').config({path:`../.env`});
 const port = process.env.PORT;
 
+  
+
 //Api for image upload in the S3 bucket
 app.post('/images', upload.single('image'), async(req, res) => {
     const file = req.file;

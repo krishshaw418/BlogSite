@@ -1,9 +1,11 @@
 import React from 'react'
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 // require('dotenv').config();
 // const port = process.env.REACT_APP_PORT;
 import { Button, buttonVariants } from '../components/Button';
 function signUp() {
+    const navigate = useNavigate();
     const [userData, setUserData] = useState({
         name: '',
         email: '',
@@ -40,6 +42,7 @@ const handleSubmit = async (e) =>{
             email: '',
             password: ''
         });
+        navigate('/admin/dashboard', { replace: true });
         setLoading(false);
     }
 }
@@ -54,11 +57,9 @@ const handleChange = (e) => {
 
   return (
     <div>
-        <div>
-        <h1>Welcome to Entrepreneurial Horizon.</h1>
-        <h2>Please Sign Up</h2>
-        </div>
-        <div className="min-h-screen flex items-center justify-center">
+        <div className="min-h-screen flex flex-col gap-2 items-center justify-center">
+        <h1 className='text-3xl font-bold'>Welcome to Entrepreneurial Horizon!</h1>
+        <h2 className='text-2xl font-bold'>Please Sign Up</h2>
         <form onSubmit={handleSubmit} className='bg-white p-8 rounded-lg shadow-lg w-full max-w-sm'>
             <div>
                 <label htmlFor="name">Name:</label>
