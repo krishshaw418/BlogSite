@@ -9,7 +9,7 @@ function AdminDashboard() {
     views:"",
     likes:""
   }]);
-
+  const [post,setPosts] = useState([]);
   // const [visits, setVisits] = useState([{
   //     date:"",
   //     visits:"",
@@ -28,6 +28,7 @@ function AdminDashboard() {
         })
         if(!response.ok) throw new Error('Failed to fetch blogs');
         const data = await response.json();
+        setPosts(data);
         // setBlogs(data.map(blog => ({
         //   title: blog.heading,
         //   views: blog.views,
@@ -77,7 +78,7 @@ function AdminDashboard() {
     <div>
         <Header></Header>
         <Graph data={blogData} />
-        <PostList></PostList>
+        <PostList blogs={post}></PostList>
     </div>
   )
 }
