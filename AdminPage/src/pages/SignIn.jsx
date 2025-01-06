@@ -4,10 +4,9 @@ import { useNavigate } from 'react-router-dom';
 // require('dotenv').config();
 // const port = process.env.REACT_APP_PORT;
 import { Button, buttonVariants } from '../components/Button';
-function SignUp() {
+function SignIn() {
     const navigate = useNavigate();
     const [userData, setUserData] = useState({
-        name: '',
         email: '',
         password: ''
     });
@@ -22,7 +21,7 @@ const handleSubmit = async (e) =>{
     setLoading(true);
 
     try {
-        const response = await fetch(`http://localhost:5000/signUp`, {
+        const response = await fetch(`http://localhost:5000/signIn`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -38,7 +37,6 @@ const handleSubmit = async (e) =>{
         alert("Failed to sign up");
     }finally{
         setUserData({
-            name: '',
             email: '',
             password: ''
         });
@@ -58,13 +56,13 @@ const handleChange = (e) => {
   return (
     <div>
         <div className="min-h-screen flex flex-col gap-2 items-center justify-center">
-        <h1 className='text-3xl font-bold'>Welcome to Entrepreneurial Horizon!</h1>
-        <h2 className='text-2xl font-bold'>Please Sign Up</h2>
+        <h1 className='text-3xl font-bold'>Welcome Back to Entrepreneurial Horizon!</h1>
+        <h2 className='text-2xl font-bold'>Please Sign In</h2>
         <form onSubmit={handleSubmit} className='bg-white p-8 rounded-lg shadow-lg w-full max-w-sm'>
-            <div>
+            {/* <div>
                 <label htmlFor="name">Name:</label>
                 <input type="text" id="name" name="name" value={userData.name} onChange={handleChange} autoComplete="name" required className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"/>
-            </div>
+            </div> */}
             <div>
                 <label htmlFor="email">Email:</label>
                 <input type="email" id="email" name="email" value={userData.email} onChange={handleChange} autoComplete="email" required className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"/>
@@ -75,11 +73,11 @@ const handleChange = (e) => {
             </div>
             {/* <button type="submit" className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mt-4"
             >Sign Up</button> */}
-            <Button type="submit" className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mt-4">Sign Up</Button>
+            <Button type="submit" className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mt-4">Sign In</Button>
         </form>
         </div>
     </div>
   )
 }
 
-export default SignUp
+export default SignIn

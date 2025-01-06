@@ -6,15 +6,20 @@ const multer = require('multer');
 const fs = require('fs');
 const util = require('util');
 const unLinkFile = util.promisify(fs.unlink);
-app.use(cors());
-app.use(express.json());
 const {BlogPost, AdminData} = require('./db');
 const {uploadFile, getFile, deleteFile} = require('./s3');
 const upload = multer({ dest: 'uploads/' });
 require('dotenv').config({path:`../.env`});
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
 const port = process.env.PORT;
+const secret = process.env.SECRET_KEY;
+app.use(cors());
+app.use(express.json());
+app.use(cookieParser());
 
-  
+
 
 //Api for image upload in the S3 bucket
 app.post('/images', upload.single('image'), async(req, res) => {
@@ -136,14 +141,56 @@ app.put(`/post/view/:uid`, async(req,res)=>{
 //Api for new admin singUp
 app.post(`/signUp`, async(req, res)=>{
     const {name,email,password} = req.body;
+    if(!name || !email || !password)
+        return res.json({message:"Please fill all the fields!"});
+
+    const user = await AdminData.findOne({email});
+    if(user)
+        return res.json({message:"Admin already Exist! Please SignIn."});
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     try {
-        const newAdmin = new AdminData({name:name,email:email,password:password});
+        const newAdmin = new AdminData({name:name,email:email,password:hashedPassword});
         await newAdmin.save();
         res.json({message:"Admin Created Successfully!"});
     }catch (error) {
         res.json({message:"Failed to create Admin!"}, error);
     }
+
 })
+
+//Api for Admin signIn
+app.post('/signIn', async (req, res) => {
+    const { email, password } = req.body;
+  
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password are required.' });
+    }
+  
+    const user = await AdminData.findOne({email});
+    if (!user) {
+      return res.status(404).json({ error: 'User not found.' });
+    }
+  
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ error: 'Invalid credentials!' });
+    }
+  
+    const token = jwt.sign({ id: user.id, email: user.email }, secret, {
+      expiresIn: '1h',
+    });
+  
+    res.cookie('auth_token', token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'strict',
+      maxAge: 60 * 60 * 1000,
+    });
+  
+    res.json({ message: 'Sign-in successful!' });
+  });
 
 app.listen(port,()=>{
     console.log(`Listening....`);
