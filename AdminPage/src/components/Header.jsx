@@ -30,9 +30,17 @@ function Header() {
               <div className="flex flex-col space-y-2">
                 <Button onClick={()=>{navigate(`/admin/dashboard`)}}>Admin Dashboard</Button>
                 <Button>Admin Profile</Button>
-                <Button onClick={()=>{window.open(`/admin/editor`, `_blank`)}}>Editor</Button>
+                <Button onClick={()=>{navigate(`/admin/editor`, `_blank`)}}>Editor</Button>
                 <Button>Settings</Button>
-                <Button>Log Out</Button>
+                <Button onClick={async ()=>{
+                  const response = await fetch(`http://localhost:5000/logout`,{
+                    method:'POST',
+                    credentials:'include',
+                  })
+                  const data = await response.json();
+                  console.log(data.message);
+                  navigate(`/`,{replace:true})
+                }}>Log Out</Button>
               </div>
               </SheetDescription>
           </SheetHeader>

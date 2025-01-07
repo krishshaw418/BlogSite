@@ -9,13 +9,8 @@ function AdminDashboard() {
     views:"",
     likes:""
   }]);
+  
   const [post,setPosts] = useState([]);
-  // const [visits, setVisits] = useState([{
-  //     date:"",
-  //     visits:"",
-  //   }
-  // ])
-  // ;
 
   useEffect(()=>{
     const getBlogData = async ()=>{
@@ -29,17 +24,12 @@ function AdminDashboard() {
         if(!response.ok) throw new Error('Failed to fetch blogs');
         const data = await response.json();
         setPosts(data);
-        // setBlogs(data.map(blog => ({
-        //   title: blog.heading,
-        //   views: blog.views,
-        //   likes: blog.likes
-        // })));
         setBlogs(
           data
             .filter((blog) => {
-              const todayMonth = new Date().getMonth(); // Current month (0-11)
-              const blogMonth = new Date(blog.dateOfPublish).getMonth(); // Blog's month
-              return todayMonth === blogMonth; // Include only if months match
+              const todayMonth = new Date().getMonth();
+              const blogMonth = new Date(blog.dateOfPublish).getMonth();
+              return todayMonth === blogMonth;
             })
             .map((blog) => ({
               title: blog.heading, // Map the filtered blog to the desired format
@@ -57,7 +47,7 @@ function AdminDashboard() {
       }
     }
     getBlogData();
-  });
+  },[]);
 
   const blogData = {
     blogs: blogs
@@ -67,11 +57,6 @@ function AdminDashboard() {
     //       { date: "Jan", visits: 200 },
     //       { date: "Feb", visits: 300 },
     //       { date: "Mar", visits: 250 },
-    //     ],
-    //     blogs: [
-    //       { title: "Blog A", views: 120, likes: 30 },
-    //       { title: "Blog B", views: 90, likes: 50 },
-    //       { title: "Blog C", views: 150, likes: 40 },
     //     ],
     //   };
   return (

@@ -52,6 +52,7 @@ const TextEditor = () => {
       const response2 = await fetch(`http://localhost:5000/images`, {
         method: 'POST',
         body: formData,
+        credentials: 'include',
       });
 
       if(response2.ok){
@@ -68,6 +69,7 @@ const TextEditor = () => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(blogData),
+          credentials:'include',
         });
 
         if(response1.ok){
