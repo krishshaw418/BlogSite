@@ -1,6 +1,6 @@
 import React from 'react';
 import TextEditor from '../components/TextEditor';
-function Admin() {
+function Admin() {  
   return (
     <div>
       <TextEditor/>

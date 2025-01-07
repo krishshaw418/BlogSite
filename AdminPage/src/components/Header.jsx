@@ -1,7 +1,7 @@
 import React from 'react';
 import HamburgerMenu from './HamburgerMenu';
 import {Button} from './Button';
-import { useNavigate } from 'react-router-dom';
+import { replace, useNavigate } from 'react-router-dom';
 import {
   Sheet,
   SheetPortal,
@@ -16,7 +16,7 @@ import {
 } from './ui/Sheet';
 
 function Header() {
-  const navigate = useNavigate();
+  const navigate = useNavigate();  
   return (
     <div className="sticky top-0 z-10 bg-gray-800 bg-opacity-50 shadow-md transition-all duration-300 ease-in-out">
       <div className='flex justify-between items-center p-4'>
@@ -30,7 +30,7 @@ function Header() {
               <div className="flex flex-col space-y-2">
                 <Button onClick={()=>{navigate(`/admin/dashboard`)}}>Admin Dashboard</Button>
                 <Button>Admin Profile</Button>
-                <Button onClick={()=>{navigate(`/admin/editor`, `_blank`)}}>Editor</Button>
+                <Button onClick={()=>{navigate(`/admin/editor`, {replace:true})}}>Editor</Button>
                 <Button>Settings</Button>
                 <Button onClick={async ()=>{
                   const response = await fetch(`http://localhost:5000/logout`,{

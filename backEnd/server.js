@@ -16,8 +16,11 @@ const cookieParser = require('cookie-parser');
 const port = process.env.PORT;
 const secret = process.env.SECRET_KEY;
 const authenticate = require('./authenticationmiddleware');
+const { stateToHTML } = require('draft-js-export-html');
+const { convertFromRaw } = require('draft-js');
+
 app.use(cors({
-    origin: 'http://localhost:5173', // replace with your frontend's URL
+    origin: ['http://localhost:5173', 'http://localhost:5174'], // replace with your frontend's URL
     credentials: true,  // Allow cookies to be sent with requests
   }));
 app.use(express.json());
@@ -38,13 +41,15 @@ app.post(`/post`, authenticate, async(req,res)=>{
     const {heading, image, author, dateOfPublish, content} = req.body;
     const postId = uuidv4();
     try {
+        const contentState = convertFromRaw(JSON.parse(content)); // content is expected to be in raw editor format
+        const contentHTML = stateToHTML(contentState); 
         const newBlogPost = new BlogPost({
             uid:postId,
             heading:heading,
             author:author,
             image:image,
             dateOfPublish:dateOfPublish,
-            content:content
+            content:contentHTML
         });
         await newBlogPost.save();
         res.json({message:"Post Uploaded Successfully!"});
@@ -94,7 +99,7 @@ app.get(`/images/:key`, async(req,res)=>{
 });
 
 //Api for deleting a blog post
-app.delete(`/post/:key`, authenticate, async(req,res)=>{
+app.delete(`/post/:key`, async(req,res)=>{
     const {key} = req.params;
     await deleteFile(key);
     await BlogPost.findOneAndDelete({image:key});

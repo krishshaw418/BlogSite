@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+// import { stateToHTML } from 'draft-js-export-html';
 import Header from '../components/Header';
 import Views from '../components/Views';
 import '../blogcss/BlogPage.css';
@@ -40,6 +41,8 @@ const BlogPage = () => {
   }
 
   const { heading, author, dateOfPublish, content, image } = blog;
+
+  // const htmlContent = stateToHTML(content);
 
   // Format date
   const formattedDate = new Date(dateOfPublish).toLocaleDateString('en-US', {
