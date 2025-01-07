@@ -15,14 +15,18 @@ const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const port = process.env.PORT;
 const secret = process.env.SECRET_KEY;
-app.use(cors());
+const authenticate = require('./authenticationmiddleware');
+app.use(cors({
+    origin: 'http://localhost:5173', // replace with your frontend's URL
+    credentials: true,  // Allow cookies to be sent with requests
+  }));
 app.use(express.json());
 app.use(cookieParser());
 
 
 
 //Api for image upload in the S3 bucket
-app.post('/images', upload.single('image'), async(req, res) => {
+app.post('/images', authenticate, upload.single('image'), async(req, res) => {
     const file = req.file;
     const result = await uploadFile(file);
     await unLinkFile(file.path);
@@ -30,7 +34,7 @@ app.post('/images', upload.single('image'), async(req, res) => {
 });
 
 //Api for posting blog content
-app.post(`/post`, async(req,res)=>{
+app.post(`/post`, authenticate, async(req,res)=>{
     const {heading, image, author, dateOfPublish, content} = req.body;
     const postId = uuidv4();
     try {
@@ -90,7 +94,7 @@ app.get(`/images/:key`, async(req,res)=>{
 });
 
 //Api for deleting a blog post
-app.delete(`/post/:key`, async(req,res)=>{
+app.delete(`/post/:key`, authenticate, async(req,res)=>{
     const {key} = req.params;
     await deleteFile(key);
     await BlogPost.findOneAndDelete({image:key});
@@ -165,17 +169,17 @@ app.post('/signIn', async (req, res) => {
     const { email, password } = req.body;
   
     if (!email || !password) {
-      return res.status(400).json({ error: 'Email and password are required.' });
+      return res.status(400).json({ message: 'Email and password are required.' });
     }
   
     const user = await AdminData.findOne({email});
     if (!user) {
-      return res.status(404).json({ error: 'User not found.' });
+      return res.status(404).json({ message: 'User does not Exist! Please SignIn.' });
     }
   
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ error: 'Invalid credentials!' });
+      return res.status(401).json({ message: 'Invalid credentials!' });
     }
   
     const token = jwt.sign({ id: user.id, email: user.email }, secret, {
@@ -187,11 +191,24 @@ app.post('/signIn', async (req, res) => {
       secure: false,
       sameSite: 'strict',
       maxAge: 60 * 60 * 1000,
+      path:'/',
+      domain:'localhost'
     });
   
     res.json({ message: 'Sign-in successful!' });
   });
 
+//Api for logout
+app.post('/logout', (req, res) => {
+    res.clearCookie('auth_token', {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'strict',
+      path: '/',
+    });
+    res.json({ message: 'Logged out successfully!' });  
+  });
+  
 app.listen(port,()=>{
     console.log(`Listening....`);
 });

@@ -27,20 +27,24 @@ const handleSubmit = async (e) =>{
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(userData),
+            credentials: 'include',
         })
         if(response.ok){
             const data = await response.json();
-            alert(data.message);
+            setUserData({
+                email: '',
+                password: '',
+            });
+            navigate('/admin/dashboard', { replace: true });
+        }
+        else {
+            const errorData = await response.json();
+            alert(errorData.message);
         }
     } catch (error) {
         console.error("Error:", error);
-        alert("Failed to sign up");
+        alert("Failed to SignIn");
     }finally{
-        setUserData({
-            email: '',
-            password: ''
-        });
-        navigate('/admin/dashboard', { replace: true });
         setLoading(false);
     }
 }
@@ -55,14 +59,10 @@ const handleChange = (e) => {
 
   return (
     <div>
-        <div className="min-h-screen flex flex-col gap-2 items-center justify-center">
-        <h1 className='text-3xl font-bold'>Welcome Back to Entrepreneurial Horizon!</h1>
-        <h2 className='text-2xl font-bold'>Please Sign In</h2>
+        <div className="min-h-screen flex flex-col gap-2 items-center justify-center px-4 sm-px-10">
+        <h1 className='text-3xl font-bold text-center'>Welcome Back to Entrepreneurial Horizon!</h1>
+        <h2 className='text-2xl font-bold text-center'>Please Sign In</h2>
         <form onSubmit={handleSubmit} className='bg-white p-8 rounded-lg shadow-lg w-full max-w-sm'>
-            {/* <div>
-                <label htmlFor="name">Name:</label>
-                <input type="text" id="name" name="name" value={userData.name} onChange={handleChange} autoComplete="name" required className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"/>
-            </div> */}
             <div>
                 <label htmlFor="email">Email:</label>
                 <input type="email" id="email" name="email" value={userData.email} onChange={handleChange} autoComplete="email" required className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"/>
@@ -71,8 +71,6 @@ const handleChange = (e) => {
                 <label htmlFor="password">Password:</label>
                 <input type="password" id="password" name="password" value={userData.password} onChange={handleChange} autoComplete="password" required className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"/>
             </div>
-            {/* <button type="submit" className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mt-4"
-            >Sign Up</button> */}
             <Button type="submit" className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mt-4">Sign In</Button>
         </form>
         </div>
