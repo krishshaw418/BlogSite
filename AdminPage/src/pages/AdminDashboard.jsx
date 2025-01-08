@@ -15,7 +15,7 @@ function AdminDashboard() {
   useEffect(()=>{
     const getBlogData = async ()=>{
       try {
-        const response = await fetch(`http://localhost:5000/posts`,{
+        const response = await fetch(`http://localhost:5000/admin/posts`,{
           method:'GET',
           headers:{
             'Content-Type':'application/json',

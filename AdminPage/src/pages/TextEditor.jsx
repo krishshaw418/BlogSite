@@ -55,7 +55,7 @@ const TextEditor = () => {
       formData.append('image', image);
   
       // Send the image to the server
-      const response2 = await fetch(`http://localhost:5000/images`, {
+      const response2 = await fetch(`http://localhost:5000/admin/images`, {
         method: 'POST',
         body: formData,
         credentials: 'include',
@@ -71,7 +71,7 @@ const TextEditor = () => {
           image: result2.key,
         };
   
-        const response1 = await fetch(`http://localhost:5000/post`, {
+        const response1 = await fetch(`http://localhost:5000/admin/post`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
