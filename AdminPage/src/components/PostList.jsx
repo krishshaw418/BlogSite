@@ -1,33 +1,59 @@
-import React from 'react';
-
+import React, { useState, useEffect } from 'react';
+import SearchBar from './SearchBar';
 function PostList({ blogs }) {
+  const [filteredBlogs, setFilteredBlogs] = useState(blogs);
+
+  useEffect(() => {
+    setFilteredBlogs(blogs);
+  }, [blogs]);
+
+  const handleSearch = (filteredData) => {
+    setFilteredBlogs(filteredData);
+    
+    if (filteredData.length > 0) {
+      const firstMatchedBlog = filteredData[0];
+      const element = document.getElementById(firstMatchedBlog.uid);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  };
+
   return (
-    <div className="flex flex-col container mx-auto p-4  max-w-3xl">
+    <div className="flex flex-col container mx-auto p-4 max-w-3xl">
+      <SearchBar data={blogs} onSearch={handleSearch}/>
       <h1 className="text-2xl font-bold mb-4 text-gray-800 flex justify-center">Blog List</h1>
       <div className="space-y-4">
-        {blogs.map((blog) => (
-          <div
-            key={blog.uid}
-            className="flex flex-col md:flex-row items-center md:items-stretch bg-white shadow-md rounded-lg overflow-hidden border border-gray-200"
-          >
-            <img
-              src={`http://localhost:5000/images/${blog.image}`}
-              alt={blog.heading}
-              className="h-40 w-full md:w-40 object-cover"
-            />
-            <div className="flex flex-col justify-center p-4 w-full">
-              <h2 className="text-xl font-semibold text-gray-800 truncate">
-                {blog.heading}
-              </h2>
-              <p className="text-gray-600 mt-2">{new Date(blog.dateOfPublish).toLocaleDateString('en-US', {
-                  weekday: 'short',
-                  year: 'numeric',
-                  month: 'short',
-                  day: 'numeric',
-              })}</p>
+        {filteredBlogs.length === 0 ? (
+          <p className="text-center text-gray-500">No matching blogs found.</p>
+        ) : (
+          filteredBlogs.map((blog) => (
+            <div
+              key={blog.uid}
+              id={blog.uid}
+              className="flex flex-col md:flex-row items-center md:items-stretch bg-white shadow-md rounded-lg overflow-hidden border border-gray-200"
+            >
+              <img
+                src={`http://localhost:5000/images/${blog.image}`}
+                alt={blog.heading}
+                className="h-40 w-full md:w-40 object-cover"
+              />
+              <div className="flex flex-col justify-center p-4 w-full">
+                <h2 className="text-xl font-semibold text-gray-800 truncate">
+                  {blog.heading}
+                </h2>
+                <p className="text-gray-600 mt-2">
+                  {new Date(blog.dateOfPublish).toLocaleDateString('en-US', {
+                    weekday: 'short',
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                  })}
+                </p>
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );

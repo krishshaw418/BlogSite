@@ -26,39 +26,6 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-
-
-//Api for image upload in the S3 bucket
-app.post('/images', authenticate, upload.single('image'), async(req, res) => {
-    const file = req.file;
-    const result = await uploadFile(file);
-    await unLinkFile(file.path);
-    res.json({ key: result.key });
-});
-
-//Api for posting blog content
-app.post(`/post`, authenticate, async(req,res)=>{
-    const {heading, image, author, dateOfPublish, content} = req.body;
-    const postId = uuidv4();
-    try {
-        const contentState = convertFromRaw(JSON.parse(content)); // content is expected to be in raw editor format
-        const contentHTML = stateToHTML(contentState); 
-        const newBlogPost = new BlogPost({
-            uid:postId,
-            heading:heading,
-            author:author,
-            image:image,
-            dateOfPublish:dateOfPublish,
-            content:contentHTML
-        });
-        await newBlogPost.save();
-        res.json({message:"Post Uploaded Successfully!"});
-    } catch (error) {
-        console.log(`Upload failed!`, error);
-        res.json({message:"Upload Falied!"});
-    }
-});
-
 //Api for getting all blogs
 app.get(`/posts`, async(req,res)=>{
     try {
@@ -96,14 +63,6 @@ app.get(`/images/:key`, async(req,res)=>{
     const {key} = req.params;
     const result = await getFile(key);
     result.pipe(res);
-});
-
-//Api for deleting a blog post
-app.delete(`/post/:key`, async(req,res)=>{
-    const {key} = req.params;
-    await deleteFile(key);
-    await BlogPost.findOneAndDelete({image:key});
-    res.json({message:"Post Deleted Successfully!"});
 });
 
 //Api for likes count of a blog
@@ -146,6 +105,9 @@ app.put(`/post/view/:uid`, async(req,res)=>{
         return res.json({message:"Failed to update views!"});
     }
 })
+
+
+//<---------- Admin Side Endpionts ---------->
 
 //Api for new admin singUp
 app.post(`/signUp`, async(req, res)=>{
@@ -203,6 +165,11 @@ app.post('/signIn', async (req, res) => {
     res.json({ message: 'Sign-in successful!' });
   });
 
+//Api for token verification
+app.get('/verify', authenticate, (req, res) => {
+    res.status(200).send('Token is valid');
+});
+
 //Api for logout
 app.post('/logout', (req, res) => {
     res.clearCookie('auth_token', {
@@ -213,6 +180,56 @@ app.post('/logout', (req, res) => {
     });
     res.json({ message: 'Logged out successfully!' });  
   });
+
+//Api for getting all the blog posts
+app.get(`/admin/posts`,authenticate, async(req,res)=>{
+    try {
+        const posts = await BlogPost.find();
+        res.json(posts);
+    } catch (error) {
+        console.error("Error fetching the blog posts:", error);
+        res.json({ error: "Failed to fetch the blog posts" });
+    }
+});
+
+//Api for image upload in the S3 bucket
+app.post('/admin/images', authenticate, upload.single('image'), async(req, res) => {
+    const file = req.file;
+    const result = await uploadFile(file);
+    await unLinkFile(file.path);
+    res.json({ key: result.key });
+});
+
+//Api for posting blog content
+app.post(`/admin/post`, authenticate, async(req,res)=>{
+    const {heading, image, author, dateOfPublish, content} = req.body;
+    const postId = uuidv4();
+    try {
+        const contentState = convertFromRaw(JSON.parse(content)); // content is expected to be in raw editor format
+        const contentHTML = stateToHTML(contentState); 
+        const newBlogPost = new BlogPost({
+            uid:postId,
+            heading:heading,
+            author:author,
+            image:image,
+            dateOfPublish:dateOfPublish,
+            content:contentHTML
+        });
+        await newBlogPost.save();
+        res.json({message:"Post Uploaded Successfully!"});
+    } catch (error) {
+        console.log(`Upload failed!`, error);
+        res.json({message:"Upload Falied!"});
+    }
+});
+
+//Api for deleting a blog post
+app.delete(`/post/:key`, authenticate, async(req,res)=>{
+    const {key} = req.params;
+    await deleteFile(key);
+    await BlogPost.findOneAndDelete({image:key});
+    res.json({message:"Post Deleted Successfully!"});
+});
   
 app.listen(port,()=>{
     console.log(`Listening....`);
