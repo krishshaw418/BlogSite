@@ -26,6 +26,8 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
+//<-------- Client Side endpoits -------->
+
 //Api for getting all blogs
 app.get(`/posts`, async(req,res)=>{
     try {
