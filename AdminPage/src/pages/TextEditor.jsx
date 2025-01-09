@@ -42,11 +42,10 @@ const TextEditor = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-    if (loading) return; // Prevent duplicate submissions
+    if (loading) return;
     setLoading(true);
   
     try {
-      // Check if image is selected before sending it
       if (!image) {
         throw new Error('Image is required');
       }
@@ -204,7 +203,7 @@ const TextEditor = () => {
         <div
           className={`fixed top-0 right-0 h-full w-full bg-gray-900 bg-opacity-75 z-50 flex justify-center items-center`}
         >
-          <div className="bg-white w-3/4 h-3/4 overflow-auto rounded-lg shadow-lg relative p-6">
+          <div className="bg-[rgb(2,6,34)] w-3/4 h-3/4 overflow-auto rounded-lg shadow-lg relative p-6">
             <button
               onClick={handleClosePreview}
               className="absolute top-4 right-4 bg-red-500 text-white rounded-full p-2 hover:bg-red-600"
@@ -212,23 +211,24 @@ const TextEditor = () => {
               X
             </button>
             <div className="h-full overflow-auto">
-              <div className="p-4">
-                <h1 className="text-2xl font-bold mb-4">{heading}</h1>
-                <p className="text-gray-600 mb-4">
+              <div className="p-4 text-white flex flex-col items-center">
+                <h1 className="text-4xl font-bold mb-4">{heading}</h1>
+                <p className="mb-4">
                   By <span className="font-semibold">{author}</span> | Published on {formattedDate}
                 </p>
                 {image && (
                   <img
                     src={URL.createObjectURL(image)}
                     alt={heading}
-                    className="mb-4 max-w-full h-auto rounded"
+                    className="mb-4 w-80 h-auto rounded"
                   />
                 )}
-                {/* Render the HTML content for preview */}
-                <div
-                  className="text-gray-800 leading-relaxed"
-                  dangerouslySetInnerHTML={{ __html: htmlContent }}
-                />
+                <div className="max-w-3xl w-full leading-relaxed">
+                    <div
+                      className="w-full"
+                      dangerouslySetInnerHTML={{ __html: htmlContent }}
+                    />
+                </div>
               </div>
             </div>
           </div>
