@@ -50,6 +50,33 @@ function AdminDashboard() {
     getBlogData();
   },[]);
 
+  const refreshDashboard = async () => {
+    // Refetch the blogs after a post is deleted
+    const response = await fetch('http://localhost:5000/admin/posts',{
+      method:'GET',
+      headers:{
+        'Content-Type':'application/json',
+      },
+      credentials:'include',
+    });
+    if(!response.ok) throw new Error('Failed to reload blogs');
+    const data = await response.json();
+    setPosts(data);
+    setBlogs(
+      data
+        .filter((blog) => {
+          const todayMonth = new Date().getMonth();
+          const blogMonth = new Date(blog.dateOfPublish).getMonth();
+          return todayMonth === blogMonth;
+        })
+        .map((blog) => ({
+          title: blog.heading, // Map the filtered blog to the desired format
+          views: blog.views,
+          likes: blog.likes,
+        }))
+    );
+  };
+
   const blogData = {
     blogs: blogs
   }
@@ -64,7 +91,7 @@ function AdminDashboard() {
     <div>
         <Header></Header>
         <Graph data={blogData} />
-        <PostList blogs={post}></PostList>
+        <PostList blogs={post} refreshDashboard={refreshDashboard}></PostList>
     </div>
   )
 }

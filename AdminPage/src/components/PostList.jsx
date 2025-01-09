@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import SearchBar from './SearchBar';
-function PostList({ blogs }) {
+import { Button } from './Button';
+
+function PostList({ blogs, refreshDashboard }) {
   const [filteredBlogs, setFilteredBlogs] = useState(blogs);
 
   useEffect(() => {
@@ -16,6 +18,22 @@ function PostList({ blogs }) {
       if (element) {
         element.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
+    }
+  };
+
+  const handleDelete = async (image) => {
+    try {
+      const response = await fetch(`http://localhost:5000/post/${image}`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+      if (response.ok) {
+        refreshDashboard();
+      } else {
+        console.error('Failed to delete the blog post');
+      }
+    } catch (error) {
+      console.error('Error deleting blog post:', error);
     }
   };
 
@@ -50,6 +68,11 @@ function PostList({ blogs }) {
                     day: 'numeric',
                   })}
                 </p>
+              </div>
+              <div className="flex justify-end p-4 w-full">
+                <Button onClick={() => handleDelete(blog.image)} className="bg-red-600 text-white hover:bg-red-700">
+                  Delete
+                </Button>
               </div>
             </div>
           ))
