@@ -79,7 +79,7 @@ const handleChange = (e) => {
             </div>
             <Button type="submit" className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mt-4">Sign Up</Button>
         </form>
-        <a href="/signIn" className='hover:text-blue-500'>Already have an account? SignIn</a>
+        <span>Already have an account? <a href="/signIn" className='text-blue-500'>SignIn</a></span>
         </div>
     </div>
   )
