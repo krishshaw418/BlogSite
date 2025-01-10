@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Editor, EditorState, convertToRaw } from 'draft-js';
 import { stateToHTML } from 'draft-js-export-html';
 import 'draft-js/dist/Draft.css';
+// import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import '../blogcss/BlogPage.css';
 
 const TextEditor = () => {

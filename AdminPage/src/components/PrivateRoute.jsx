@@ -28,12 +28,16 @@ const PrivateRoute = ({ children }) => {
 
         verifyToken();
     }, []);
+    
+    useEffect(() => {
+        if (!isLoading && !isAuthenticated) {
+            // Perform redirection after loading and authentication check
+            navigate('/signIn', { replace: true });
+        }
+    }, [isAuthenticated, isLoading, navigate]);
+
     if (isLoading) return <div>Loading...</div>;
 
-    if (!isAuthenticated) {
-        navigate('/signIn', { replace: true });
-        return null;
-    }
     return children;
 };
 
