@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Editor, EditorState, convertToRaw } from 'draft-js';
 import { stateToHTML } from 'draft-js-export-html';
+import Header from '../components/Header';
 import 'draft-js/dist/Draft.css';
 // import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import '../blogcss/BlogPage.css';
@@ -110,6 +111,8 @@ const TextEditor = () => {
   const htmlContent = stateToHTML(contentState);
 
   return (
+  <div>
+    <Header></Header>
     <div className="bg-gray-200 min-h-screen p-8">
       <div className="max-w-2xl mx-auto bg-white p-6 rounded shadow">
         <h1 className="text-2xl font-bold mb-4">Create a Blog Post</h1>
@@ -236,6 +239,7 @@ const TextEditor = () => {
         </div>
       )}
     </div>
+  </div>
   );
 };
 
