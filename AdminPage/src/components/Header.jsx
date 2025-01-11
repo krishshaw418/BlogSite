@@ -29,7 +29,7 @@ function Header() {
             <SheetDescription asChild>
               <div className="flex flex-col space-y-2">
                 <Button onClick={()=>{navigate(`/admin/dashboard`)}}>Admin Dashboard</Button>
-                <Button>Admin Profile</Button>
+                <Button onClick={()=>{navigate(`/admin/profile`)}}>Admin Profile</Button>
                 <Button onClick={()=>{navigate(`/admin/editor`)}}>Editor</Button>
                 <Button>Settings</Button>
                 <Button onClick={async ()=>{

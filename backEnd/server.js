@@ -143,7 +143,7 @@ app.post('/signIn', async (req, res) => {
   
     const user = await AdminData.findOne({email});
     if (!user) {
-      return res.status(404).json({ message: 'User does not Exist! Please SignIn.' });
+      return res.status(404).json({ message: 'User does not Exist! Please SignUp.' });
     }
   
     const isMatch = await bcrypt.compare(password, user.password);
@@ -151,7 +151,7 @@ app.post('/signIn', async (req, res) => {
       return res.status(401).json({ message: 'Invalid credentials!' });
     }
   
-    const token = jwt.sign({ id: user.id, email: user.email }, secret, {
+    const token = jwt.sign({ id: user._id }, secret, {
       expiresIn: '1h',
     });
   
@@ -171,6 +171,21 @@ app.post('/signIn', async (req, res) => {
 app.get('/verify', authenticate, (req, res) => {
     res.status(200).send('Token is valid');
 });
+
+//Api for getting Admin data
+app.get(`/user`, authenticate, async (req,res)=>{
+    const { email } = req.query;
+    try {
+        const data = await AdminData.findOne({email});
+        if(data)
+            return res.json(data);
+        else
+            return res.json({message:"Could not find user data."});
+    } catch (error) {
+        console.error('Error fetching user data: ',error);
+        return res.json({message:"An error occured!"});
+    }
+})
 
 //Api for logout
 app.post('/logout', (req, res) => {

@@ -6,6 +6,7 @@ import SignUp from './pages/SignUp';
 import AdminDashboard from './pages/AdminDashboard';
 import SignIn from './pages/SignIn';
 import PrivateRoute from './components/PrivateRoute';
+import AdminProfile from './pages/AdminProfile';
 // import BlogPostPreview from './components/BlogPostPreview';
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path='/signIn' element={<SignIn/>}></Route>
         <Route path='/admin/editor' element={<PrivateRoute><TextEditor/></PrivateRoute>}></Route>
         <Route path='/admin/dashboard' element={<PrivateRoute><AdminDashboard/></PrivateRoute>}></Route>
+        <Route path='/admin/profile' element={<PrivateRoute><AdminProfile/></PrivateRoute>}></Route>
       </Routes>
     </Router>
   )
