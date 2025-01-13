@@ -174,11 +174,11 @@ app.get('/verify', authenticate, (req, res) => {
 
 //Api for getting Admin data
 app.get(`/user`, authenticate, async (req,res)=>{
-    const { email } = req.query;
+    const { email } = req.body;
     try {
         const data = await AdminData.findOne({email});
         if(data)
-            return res.json(data);
+            return res.json(data._id);
         else
             return res.json({message:"Could not find user data."});
     } catch (error) {
@@ -219,12 +219,13 @@ app.post('/admin/images', authenticate, upload.single('image'), async(req, res) 
 
 //Api for posting blog content
 app.post(`/admin/post`, authenticate, async(req,res)=>{
-    const {heading, image, author, dateOfPublish, content} = req.body;
+    const {heading, image, author, dateOfPublish, content, userId} = req.body;
     const postId = uuidv4();
     try {
         const contentState = convertFromRaw(JSON.parse(content)); // content is expected to be in raw editor format
         const contentHTML = stateToHTML(contentState); 
         const newBlogPost = new BlogPost({
+            userId:userId,
             uid:postId,
             heading:heading,
             author:author,
