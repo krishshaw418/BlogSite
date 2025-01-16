@@ -3,6 +3,10 @@ require('dotenv').config({path:`../.env`});
 const uri = process.env.MONGO_URI;
 
 const blogPostSchema = new mongoose.Schema({
+  userId:{
+    type: String,
+    unique: false
+  },
   uid: {
     type: String,
     unique: true,

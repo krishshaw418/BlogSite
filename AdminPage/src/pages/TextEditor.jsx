@@ -8,7 +8,7 @@ import 'draft-js/dist/Draft.css';
 import '../blogcss/BlogPage.css';
 
 const TextEditor = () => {
-  const userId = useParams();
+  // const userId = useParams();
   const editorRef = useRef(null);
   const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
   const [heading, setHeading] = useState('');
@@ -68,7 +68,7 @@ const TextEditor = () => {
         const result2 = await response2.json();
         const content = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
         const blogData = {
-          userId: userId,
+          // userId: userId,
           heading,
           author,
           content,

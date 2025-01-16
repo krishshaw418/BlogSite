@@ -142,6 +142,7 @@ app.post('/signIn', async (req, res) => {
     }
   
     const user = await AdminData.findOne({email});
+    
     if (!user) {
       return res.status(404).json({ message: 'User does not Exist! Please SignUp.' });
     }
@@ -164,21 +165,26 @@ app.post('/signIn', async (req, res) => {
       domain:'localhost'
     });
   
-    res.json({ message: 'Sign-in successful!' });
+    res.json({ message: 'Sign-in successful!', userId: user._id });
   });
 
 //Api for token verification
 app.get('/verify', authenticate, (req, res) => {
-    res.status(200).send('Token is valid');
+    const userId = req.user;
+    res.status(200).json({message:'Token is valid', userId: userId});
 });
 
 //Api for getting Admin data
 app.get(`/user`, authenticate, async (req,res)=>{
-    const { email } = req.body;
+    const userId = req.user;
+    // const { email } = req.body;
+    if(!userId){
+        res.json({message: "Access Denied!"});
+    }
     try {
-        const data = await AdminData.findOne({email});
+        const data = await AdminData.findOne({_id: userId.id});
         if(data)
-            return res.json(data._id);
+            return res.json(data);
         else
             return res.json({message:"Could not find user data."});
     } catch (error) {
@@ -198,10 +204,11 @@ app.post('/logout', (req, res) => {
     res.json({ message: 'Logged out successfully!' });  
   });
 
-//Api for getting all the blog posts
-app.get(`/admin/posts`,authenticate, async(req,res)=>{
+//Api for getting Admin's blog posts
+app.get(`/admin/posts`,authenticate , async(req,res)=>{
+    const userId = req.user;
     try {
-        const posts = await BlogPost.find();
+        const posts = await BlogPost.find({userId: userId.id});
         res.json(posts);
     } catch (error) {
         console.error("Error fetching the blog posts:", error);
@@ -219,13 +226,14 @@ app.post('/admin/images', authenticate, upload.single('image'), async(req, res) 
 
 //Api for posting blog content
 app.post(`/admin/post`, authenticate, async(req,res)=>{
-    const {heading, image, author, dateOfPublish, content, userId} = req.body;
+    const userId = req.user;
+    const {heading, image, author, dateOfPublish, content} = req.body;
     const postId = uuidv4();
     try {
         const contentState = convertFromRaw(JSON.parse(content)); // content is expected to be in raw editor format
         const contentHTML = stateToHTML(contentState); 
         const newBlogPost = new BlogPost({
-            userId:userId,
+            userId:userId.id,
             uid:postId,
             heading:heading,
             author:author,
@@ -243,9 +251,10 @@ app.post(`/admin/post`, authenticate, async(req,res)=>{
 
 //Api for deleting a blog post
 app.delete(`/post/:key`, authenticate, async(req,res)=>{
+    const userId = req.user;
     const {key} = req.params;
     await deleteFile(key);
-    await BlogPost.findOneAndDelete({image:key});
+    await BlogPost.findOneAndDelete({userId: userId.id, image:key});
     res.json({message:"Post Deleted Successfully!"});
 });
   
