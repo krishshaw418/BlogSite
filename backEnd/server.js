@@ -115,20 +115,37 @@ app.put(`/post/view/:uid`, async(req,res)=>{
 app.post(`/signUp`, async(req, res)=>{
     const {name,email,password} = req.body;
     if(!name || !email || !password)
-        return res.json({message:"Please fill all the fields!"});
+        return res.status(400).json({message:"Please fill all the fields!"});
 
     const user = await AdminData.findOne({email});
     if(user)
-        return res.json({message:"Admin already Exist! Please SignIn."});
+        return res.status(403).json({message:"Admin already Exist! Please SignIn."});
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     try {
         const newAdmin = new AdminData({name:name,email:email,password:hashedPassword});
-        await newAdmin.save();
+        const id = await newAdmin.save()
+        .then((savedDoc)=>{
+            return savedDoc._id;
+        })
+        .catch((err)=>{
+            console.log('error saving the doc', err);
+        });
+
+        const token = jwt.sign({id}, secret, {expiresIn: '1h'});
+
+        res.cookie('auth_token', token, {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'strict',
+            maxAge: 60 * 60 * 1000,
+            path:'/',
+            domain:'localhost'
+          });
         res.json({message:"Admin Created Successfully!"});
     }catch (error) {
-        res.json({message:"Failed to create Admin!"}, error);
+        res.status(500).json({message:"Failed to create Admin!"}, error);
     }
 
 })

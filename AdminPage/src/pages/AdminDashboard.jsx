@@ -12,6 +12,7 @@ function AdminDashboard() {
   
   const [post,setPosts] = useState([]);
 
+  const [user, setUser] = useState("");
   useEffect(()=>{
     const getBlogData = async ()=>{
       try {
@@ -49,6 +50,15 @@ function AdminDashboard() {
     }
     getBlogData();
   },[]);
+
+  // const getUser = async ()=> {
+  //   const response = await fetch(`http://localhost:5000/user`);
+  //     if(!response.ok){
+  //       throw new Error('Failed to fetch user data');
+  //   }
+  //   const data = await response.json();
+  //   setUser(data.name);
+  // }
 
   const refreshDashboard = async () => {
     // Refetch the blogs after a post is deleted
