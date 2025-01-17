@@ -57,9 +57,14 @@ function PostList({ blogs, refreshDashboard }) {
                 className="h-40 w-full md:w-40 object-cover"
               />
               <div className="flex flex-col justify-center p-4 w-full">
-                <h2 className="text-xl font-semibold text-gray-800 truncate">
+                {/* <h2 className="text-xl font-semibold text-gray-800 truncate">
                   {blog.heading}
-                </h2>
+                </h2> */}
+                <div className="max-w-full w-64 overflow-hidden">
+                  <h2 className="text-xl font-semibold text-gray-800 truncate">
+                    {blog.heading}
+                  </h2>
+                </div>
                 <p className="text-gray-600 mt-2">
                   {new Date(blog.dateOfPublish).toLocaleDateString('en-US', {
                     weekday: 'short',

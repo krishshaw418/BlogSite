@@ -28,11 +28,19 @@ function AdminProfile() {
         getUser();
     },[])
 
+    const handleImageUpload = () => {
+        alert("Upload functionality not implemented yet!");
+      };
+
   return (
     <div>
-        <Header></Header>
-        <p>Name:{user.username}</p>
-        <p>Email:{user.email}</p>
+      <Header></Header>
+      <div className="min-h-screen flex flex-col gap-2 items-center justify-center px-4 sm-px-10">
+      <div>
+      <span><p>Name: {user.username}</p></span>
+      <span><p>Email: {user.email}</p></span>
+      </div>
+    </div>
     </div>
   )
 }
