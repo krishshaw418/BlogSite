@@ -56,7 +56,7 @@ const BlogPage = () => {
     <div>
       <Header/>
       <div >
-      <h1 className="blog-title">{heading}</h1>
+      <div className="flex flex-col justify-center items-center text-6xl font-bold text-white text-center m-2 p-3"><h1>{heading}</h1></div>
       <div className="blog-author gap-2 p-3 items-center">
       <p> By <span className='px-1 font-bold'>{author}</span> | Published on {formattedDate}</p>
       <Views uid={uid}/>
