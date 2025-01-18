@@ -2,7 +2,9 @@ import React from 'react'
 import Header from '../components/Header';
 import Graph from '../components/Graph';
 import PostList from '../components/PostList';
+import { Button } from '../components/Button';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 function AdminDashboard() {
   const [blogs, setBlogs] = useState([{
     title:"",
@@ -13,6 +15,7 @@ function AdminDashboard() {
   const [post,setPosts] = useState([]);
 
   const [user, setUser] = useState("");
+  const navigate = useNavigate();
   useEffect(()=>{
     const getBlogData = async ()=>{
       try {
@@ -40,10 +43,6 @@ function AdminDashboard() {
             }))
         );
         
-        // setVisits(data.map(blog => ({
-        //   date: formattedDate,
-        //   visits: 
-        // })))
       } catch (error) {
         console.error('Error fetching blogs:', error);
       }
@@ -90,13 +89,22 @@ function AdminDashboard() {
   const blogData = {
     blogs: blogs
   }
-    // const blogData = {
-    //     visits: [
-    //       { date: "Jan", visits: 200 },
-    //       { date: "Feb", visits: 300 },
-    //       { date: "Mar", visits: 250 },
-    //     ],
-    //   };
+// if(blogs != [{
+//   title:"",
+//   views:"",
+//   likes:""
+// }]){
+//   return (
+//     <div>
+//       <Header></Header>
+//       <div>
+//         <Button onClick = {()=>{
+//           navigate(`/admin/editor`)
+//         }}>Get Started</Button>
+//       </div>
+//     </div>
+//   )
+// }
   return (
     <div>
         <Header></Header>
