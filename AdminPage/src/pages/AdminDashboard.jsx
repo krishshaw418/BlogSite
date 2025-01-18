@@ -99,7 +99,7 @@ function AdminDashboard() {
 //       <Header></Header>
 //       <div>
 //         <Button onClick = {()=>{
-//           navigate(`/admin/editor`);
+//           navigate(`/admin/editor`)
 //         }}>Get Started</Button>
 //       </div>
 //     </div>
