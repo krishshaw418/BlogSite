@@ -12,7 +12,7 @@ function AdminDashboard() {
     likes:""
   }]);
   
-  const [post,setPosts] = useState([]);
+  const [post,setPost] = useState([]);
 
   const [user, setUser] = useState("");
   const navigate = useNavigate();
@@ -28,7 +28,7 @@ function AdminDashboard() {
         })
         if(!response.ok) throw new Error('Failed to fetch blogs');
         const data = await response.json();
-        setPosts(data);
+        setPost(data);
         setBlogs(
           data
             .filter((blog) => {
@@ -50,15 +50,6 @@ function AdminDashboard() {
     getBlogData();
   },[]);
 
-  // const getUser = async ()=> {
-  //   const response = await fetch(`http://localhost:5000/user`);
-  //     if(!response.ok){
-  //       throw new Error('Failed to fetch user data');
-  //   }
-  //   const data = await response.json();
-  //   setUser(data.name);
-  // }
-
   const refreshDashboard = async () => {
     // Refetch the blogs after a post is deleted
     const response = await fetch('http://localhost:5000/admin/posts',{
@@ -70,7 +61,7 @@ function AdminDashboard() {
     });
     if(!response.ok) throw new Error('Failed to reload blogs');
     const data = await response.json();
-    setPosts(data);
+    setPost(data);
     setBlogs(
       data
         .filter((blog) => {
@@ -89,22 +80,19 @@ function AdminDashboard() {
   const blogData = {
     blogs: blogs
   }
-// if(blogs != [{
-//   title:"",
-//   views:"",
-//   likes:""
-// }]){
-//   return (
-//     <div>
-//       <Header></Header>
-//       <div>
-//         <Button onClick = {()=>{
-//           navigate(`/admin/editor`)
-//         }}>Get Started</Button>
-//       </div>
-//     </div>
-//   )
-// }
+
+// console.log(post);
+
+  // if(post){
+  //   return(
+  //     <div>
+  //       <Button onClick={()=>{
+  //         navigate(`/admin/editor`)
+  //       }}>Delete</Button>
+  //     </div>
+  //   )
+  // }
+
   return (
     <div>
         <Header></Header>
