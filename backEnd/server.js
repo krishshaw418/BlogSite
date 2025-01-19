@@ -226,7 +226,8 @@ app.get(`/admin/posts`,authenticate , async(req,res)=>{
     const userId = req.user;
     try {
         const posts = await BlogPost.find({userId: userId.id});
-        console.log(posts);
+        // console.log(posts);
+        if(posts == []) return res.json({message:"No posts to show yet!"});
         res.json(posts);
     } catch (error) {
         console.error("Error fetching the blog posts:", error);

@@ -10,7 +10,7 @@ function AdminProfile() {
     useEffect(()=>{
         const getUser = async () =>{
             try {
-                const response = await fetch(`http://localhost:5000/user?email=amanshaw@gmail.com`,{
+                const response = await fetch(`http://localhost:5000/user`,{
                     method:'GET',
                     headers:{
                         'Content-Type':'application/json'
@@ -27,10 +27,6 @@ function AdminProfile() {
         }
         getUser();
     },[])
-
-    const handleImageUpload = () => {
-        alert("Upload functionality not implemented yet!");
-      };
 
   return (
     <div>
