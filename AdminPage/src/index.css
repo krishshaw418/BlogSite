@@ -6,6 +6,10 @@
     background-color: white;
 } */
 
+body::-webkit-scrollbar {
+  display: none; /* Hide scrollbar */
+}
+
 @layer base {
   :root {
 
