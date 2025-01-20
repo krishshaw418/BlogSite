@@ -29,9 +29,9 @@ const BlogCard = ({uid, image, title, content, author, date }) => {
         onClick={handleClick}
       />
       <div className="p-4">
-        <h2 className="text-xl font-bold mb-2">{title}</h2>
+        <h2 className="text-xl font-bold mb-2 overflow-hidden truncate">{title}</h2>
         <div
-          className="text-sm mb-4"
+          className="text-sm mb-4 overflow-hidden truncate"
           dangerouslySetInnerHTML={{ __html: truncatedContent }}
         />
         <div className="flex flex-col sm:flex-row items-center sm:justify-between text-sm space-y-2 sm:space-y-0">
