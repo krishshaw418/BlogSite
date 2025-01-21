@@ -278,23 +278,20 @@ app.delete(`/post/:key`, authenticate, async(req,res)=>{
   
 // <------------ TEST API for REDIS CACHE ------------->
 app.get('/api/user', async (req, res) => {
-    const { userId } = req.query;  // Assuming userId is passed as a query parameter
+    const { userId } = req.query;
     if (!userId) {
         return res.status(400).json({ error: 'User ID is required' });
     }
 
-    const cacheKey = `api:user:${userId}`;  // Use a unique cache key for each user
+    const cacheKey = `api:user:${userId}`;
 
-    // Try to get the data from cache first
     const cachedResponse = await client.get(cacheKey);
 
     if (cachedResponse) {
-        // Cache hit: Return cached data
         console.log('Cache hit for user:', userId);
         return res.json(JSON.parse(cachedResponse));
     }
 
-    // Cache miss: Fetch from database
     try {
         const userData = await AdminData.findOne({ _id: userId });
 
@@ -306,7 +303,7 @@ app.get('/api/user', async (req, res) => {
         await client.setEx(cacheKey, 600, JSON.stringify(userData));
         console.log('Cache miss for user:', userId);
 
-        return res.json(userData);  // Return fresh data
+        return res.json(userData);
     } catch (err) {
         return res.status(500).json({ error: 'Database error' });
     }
