@@ -18,6 +18,7 @@ const secret = process.env.SECRET_KEY;
 const authenticate = require('./authenticationmiddleware');
 const { stateToHTML } = require('draft-js-export-html');
 const { convertFromRaw } = require('draft-js');
+const client = require('./redisClient');
 
 app.use(cors({
     origin: ['http://localhost:5173', 'http://localhost:5174'], // replace with your frontend's URL
@@ -275,6 +276,42 @@ app.delete(`/post/:key`, authenticate, async(req,res)=>{
     res.json({message:"Post Deleted Successfully!"});
 });
   
+// <------------ TEST API for REDIS CACHE ------------->
+app.get('/api/user', async (req, res) => {
+    const { userId } = req.query;  // Assuming userId is passed as a query parameter
+    if (!userId) {
+        return res.status(400).json({ error: 'User ID is required' });
+    }
+
+    const cacheKey = `api:user:${userId}`;  // Use a unique cache key for each user
+
+    // Try to get the data from cache first
+    const cachedResponse = await client.get(cacheKey);
+
+    if (cachedResponse) {
+        // Cache hit: Return cached data
+        console.log('Cache hit for user:', userId);
+        return res.json(JSON.parse(cachedResponse));
+    }
+
+    // Cache miss: Fetch from database
+    try {
+        const userData = await AdminData.findOne({ _id: userId });
+
+        if (!userData) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Cache the result for future use (10 minutes TTL)
+        await client.setEx(cacheKey, 600, JSON.stringify(userData));
+        console.log('Cache miss for user:', userId);
+
+        return res.json(userData);  // Return fresh data
+    } catch (err) {
+        return res.status(500).json({ error: 'Database error' });
+    }
+});
+
 app.listen(port,()=>{
     console.log(`Listening....`);
 });
