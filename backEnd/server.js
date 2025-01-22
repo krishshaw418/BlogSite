@@ -199,13 +199,25 @@ app.get(`/user`, authenticate, async (req,res)=>{
     if(!userId){
         res.json({message: "Access Denied!"});
     }
+
+    const cacheKey = `userInfo:${userId.id}`;
+    const cachedResponse = await client.get(cacheKey);
+
+    if (cachedResponse) {
+        console.log('Cache hit for user:', userId.id);
+        return res.json(JSON.parse(cachedResponse));
+    }
+
     try {
         const data = await AdminData.findOne({_id: userId.id});
-        if(data)
+        if(data){
+            await client.setEx(cacheKey, 600, JSON.stringify(data));
+            console.log('Cache miss for user:', userId.id);
             return res.json(data);
+        }
         else
             return res.json({message:"Could not find user data."});
-    } catch (error) {
+    }catch (error) {
         console.error('Error fetching user data: ',error);
         return res.json({message:"An error occured!"});
     }
@@ -225,8 +237,26 @@ app.post('/logout', (req, res) => {
 //Api for getting Admin's blog posts
 app.get(`/admin/posts`,authenticate , async(req,res)=>{
     const userId = req.user;
+
+    if (!userId) {
+        return res.status(400).json({ error: 'User ID is required' });
+    }
+
+    const cacheKey = `userPosts:${userId.id}`;
+    const cachedResponse = await client.get(cacheKey);
+
+    if(cachedResponse){
+        console.log('Cache hit for user:', userId.id);
+        return res.json(JSON.parse(cachedResponse));
+    }
+
     try {
         const posts = await BlogPost.find({userId: userId.id});
+        if (!posts) {
+            return res.status(404).json({ error: 'Posts not found!' });
+        }
+        await client.setEx(cacheKey, 600, JSON.stringify(posts));
+        console.log('Cache miss for user:', userId.id);
         res.json(posts);
     } catch (error) {
         console.error("Error fetching the blog posts:", error);
@@ -274,39 +304,6 @@ app.delete(`/post/:key`, authenticate, async(req,res)=>{
     await deleteFile(key);
     await BlogPost.findOneAndDelete({userId: userId.id, image:key});
     res.json({message:"Post Deleted Successfully!"});
-});
-  
-// <------------ TEST API for REDIS CACHE ------------->
-app.get('/api/user', async (req, res) => {
-    const { userId } = req.query;
-    if (!userId) {
-        return res.status(400).json({ error: 'User ID is required' });
-    }
-
-    const cacheKey = `api:user:${userId}`;
-
-    const cachedResponse = await client.get(cacheKey);
-
-    if (cachedResponse) {
-        console.log('Cache hit for user:', userId);
-        return res.json(JSON.parse(cachedResponse));
-    }
-
-    try {
-        const userData = await AdminData.findOne({ _id: userId });
-
-        if (!userData) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-
-        // Cache the result for future use (10 minutes TTL)
-        await client.setEx(cacheKey, 600, JSON.stringify(userData));
-        console.log('Cache miss for user:', userId);
-
-        return res.json(userData);
-    } catch (err) {
-        return res.status(500).json({ error: 'Database error' });
-    }
 });
 
 app.listen(port,()=>{
