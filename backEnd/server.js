@@ -28,6 +28,62 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
+
+const sendOTP = async (email) => {
+  try {
+    const response = await twilioClient.verify.v2.services(verifySid).verifications.create({
+      to: email,
+      channel: 'email', // You can also use 'sms' or 'call'
+    });
+
+    console.log('OTP sent:', response.sid);
+    return { success: true, message: 'OTP sent successfully' };
+  } catch (error) {
+    console.error('Error sending OTP:', error);
+    return { success: false, message: 'Failed to send OTP' };
+  }
+};
+
+const verifyOTP = async (email, otp) => {
+  try {
+    const response = await twilioClient.verify.v2.services(verifySid).verificationChecks.create({
+      to: email,
+      code: otp,
+    });
+
+    if (response.status === 'approved') {
+      return { success: true, message: 'OTP verified successfully' };
+    } else {
+      return { success: false, message: 'Invalid or expired OTP' };
+    }
+  } catch (error) {
+    console.error('Error verifying OTP:', error);
+    return { success: false, message: 'Failed to verify OTP' };
+  }
+};
+
+app.post('/send-otp', async (req, res) => {
+  const { email } = req.body;
+
+  const result = await sendOTP(email);
+  if (result.success) {
+    res.status(200).send({ message: result.message });
+  } else {
+    res.status(500).send({ error: result.message });
+  }
+});
+
+app.post('/verify-otp', async (req, res) => {
+  const { email, otp } = req.body;
+
+  const result = await verifyOTP(email, otp);
+  if (result.success) {
+    res.status(200).send({ message: result.message });
+  } else {
+    res.status(400).send({ error: result.message });
+  }
+});
+
 //<-------- Client Side endpoits -------->
 
 //Api for getting all blogs
@@ -189,51 +245,51 @@ app.post('/signIn', async (req, res) => {
 
 
 //Api for sending otp
-app.post('/send-otp', async (req, res) => {
-    const { email } = req.body; // Format: "+1234567890"
+// app.post('/send-otp', async (req, res) => {
+//     const { email } = req.body; // Format: "+1234567890"
   
-    try {
-      const verification = await twilioClient.verify.v2.services(verifySid)
-        .verifications
-        .create({ to: email, channel: 'email' });
+//     try {
+//       const verification = await twilioClient.verify.v2.services(verifySid)
+//         .verifications
+//         .create({ to: email, channel: 'email' });
   
-      res.json({
-        success: true,
-        message: 'OTP sent!',
-        verificationSid: verification.sid,
-      });
-    } catch (err) {
-      res.status(500).json({
-        success: false,
-        message: 'Failed to send OTP',
-        error: err.message,
-      });
-    }
-  });
+//       res.json({
+//         success: true,
+//         message: 'OTP sent!',
+//         verificationSid: verification.sid,
+//       });
+//     } catch (err) {
+//       res.status(500).json({
+//         success: false,
+//         message: 'Failed to send OTP',
+//         error: err.message,
+//       });
+//     }
+//   });
 
 
-//Api for verifying sent otp
-  app.post('/verify-otp', async (req, res) => {
-    const { email, code } = req.body;
+// //Api for verifying sent otp
+//   app.post('/verify-otp', async (req, res) => {
+//     const { email, code } = req.body;
   
-    try {
-      const verificationCheck = await client.verify.v2.services(verifySid)
-        .verificationChecks
-        .create({ to: email, code: code });
+//     try {
+//       const verificationCheck = await client.verify.v2.services(verifySid)
+//         .verificationChecks
+//         .create({ to: email, code: code });
   
-      if (verificationCheck.status === 'approved') {
-        res.json({ success: true, message: 'OTP verified!' });
-      } else {
-        res.status(400).json({ success: false, message: 'Invalid OTP' });
-      }
-    } catch (err) {
-      res.status(500).json({
-        success: false,
-        message: 'Verification failed',
-        error: err.message,
-      });
-    }
-  });
+//       if (verificationCheck.status === 'approved') {
+//         res.json({ success: true, message: 'OTP verified!' });
+//       } else {
+//         res.status(400).json({ success: false, message: 'Invalid OTP' });
+//       }
+//     } catch (err) {
+//       res.status(500).json({
+//         success: false,
+//         message: 'Verification failed',
+//         error: err.message,
+//       });
+//     }
+//   });
 
 //Api for token verification
 app.get('/verify', authenticate, (req, res) => {
