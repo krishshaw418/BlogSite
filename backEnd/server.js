@@ -62,6 +62,7 @@ const verifyOTP = async (email, otp) => {
   }
 };
 
+//Api for sending otp
 app.post('/send-otp', async (req, res) => {
   const { email } = req.body;
 
@@ -73,6 +74,7 @@ app.post('/send-otp', async (req, res) => {
   }
 });
 
+//Api for verifying otp
 app.post('/verify-otp', async (req, res) => {
   const { email, otp } = req.body;
 
@@ -242,54 +244,6 @@ app.post('/signIn', async (req, res) => {
   
     res.json({ message: 'Sign-in successful!', userId: user._id });
   });
-
-
-//Api for sending otp
-// app.post('/send-otp', async (req, res) => {
-//     const { email } = req.body; // Format: "+1234567890"
-  
-//     try {
-//       const verification = await twilioClient.verify.v2.services(verifySid)
-//         .verifications
-//         .create({ to: email, channel: 'email' });
-  
-//       res.json({
-//         success: true,
-//         message: 'OTP sent!',
-//         verificationSid: verification.sid,
-//       });
-//     } catch (err) {
-//       res.status(500).json({
-//         success: false,
-//         message: 'Failed to send OTP',
-//         error: err.message,
-//       });
-//     }
-//   });
-
-
-// //Api for verifying sent otp
-//   app.post('/verify-otp', async (req, res) => {
-//     const { email, code } = req.body;
-  
-//     try {
-//       const verificationCheck = await client.verify.v2.services(verifySid)
-//         .verificationChecks
-//         .create({ to: email, code: code });
-  
-//       if (verificationCheck.status === 'approved') {
-//         res.json({ success: true, message: 'OTP verified!' });
-//       } else {
-//         res.status(400).json({ success: false, message: 'Invalid OTP' });
-//       }
-//     } catch (err) {
-//       res.status(500).json({
-//         success: false,
-//         message: 'Verification failed',
-//         error: err.message,
-//       });
-//     }
-//   });
 
 //Api for token verification
 app.get('/verify', authenticate, (req, res) => {
