@@ -32,11 +32,13 @@ const handleSubmit = async (e) =>{
         })
         if(response.ok){
             const data = await response.json();
-            setUserData({
-                email: '',
-                password: '',
-            });
-            navigate('/admin/dashboard', { replace: true });
+            navigate("/otp/verification", { state: { email: userData.email } });
+            // setUserData({
+            //     email: '',
+            //     password: '',
+            // });
+            // navigate('/admin/dashboard', { replace: true });
+            // navigate('/otp/verification', {replace: true});
         }
         else {
             const errorData = await response.json();
