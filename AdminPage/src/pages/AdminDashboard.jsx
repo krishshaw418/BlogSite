@@ -28,7 +28,7 @@ function AdminDashboard() {
         })
         if(!response.ok) throw new Error('Failed to fetch blogs');
         const data = await response.json();
-
+        console.log(data);
         if(data.length === 0){
           setPost([]);
           setBlogs([]);

@@ -315,6 +315,7 @@ app.get(`/admin/posts`,authenticate , async(req,res)=>{
             return res.status(404).json({ error: 'Posts not found!' });
         }
         await client.setEx(cacheKey, 600, JSON.stringify(posts));
+        console.log(posts);
         console.log('Cache miss for user:', userId.id);
         res.json(posts);
     } catch (error) {
