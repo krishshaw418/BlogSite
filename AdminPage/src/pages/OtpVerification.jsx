@@ -7,7 +7,7 @@ const OtpVerification = () => {
   const [error, setError] = useState("");
   const { state } = useLocation();
   const navigate = useNavigate();
-  const otpSent = useRef(false); // To prevent multiple OTP requests
+  const otpSent = useRef(false);
   const email = state?.email;
 
   useEffect(() => {
@@ -15,13 +15,12 @@ const OtpVerification = () => {
       alert("No email provided. Redirecting to sign in...");
       navigate("/sign-in");
     } else if (!otpSent.current) {
-      otpSent.current = true; // Prevent re-triggering
+      otpSent.current = true; 
       sendOtp();
     }
   }, [email]);
 
   const sendOtp = async () => {
-    console.log("Sending OTP for email:", email); // Debugging log
     try {
       const response = await fetch("http://localhost:5000/send-otp", {
         method: "POST",
