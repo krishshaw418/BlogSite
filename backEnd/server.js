@@ -22,7 +22,7 @@ const client = require('./redisClient');
 const {twilioClient, verifySid} = require('./twilioClient');
 
 app.use(cors({
-    origin: ['http://localhost:5173', 'http://localhost:5174'], // replace with your frontend's URL
+    origin: ['http://localhost:5173', 'http://localhost:5174'],
     credentials: true,  // Allow cookies to be sent with requests
   }));
 app.use(express.json());
@@ -33,7 +33,7 @@ const sendOTP = async (email) => {
   try {
     const response = await twilioClient.verify.v2.services(verifySid).verifications.create({
       to: email,
-      channel: 'email', // You can also use 'sms' or 'call'
+      channel: 'email',
     });
 
     console.log('OTP sent:', response.sid);
@@ -259,19 +259,19 @@ app.get(`/user`, authenticate, async (req,res)=>{
         res.json({message: "Access Denied!"});
     }
 
-    const cacheKey = `userInfo:${userId.id}`;
-    const cachedResponse = await client.get(cacheKey);
+    // const cacheKey = `userInfo:${userId.id}`;
+    // const cachedResponse = await client.get(cacheKey);
 
-    if (cachedResponse) {
-        console.log('Cache hit for user:', userId.id);
-        return res.json(JSON.parse(cachedResponse));
-    }
+    // if (cachedResponse) {
+    //     console.log('Cache hit for user:', userId.id);
+    //     return res.json(JSON.parse(cachedResponse));
+    // }
 
     try {
         const data = await AdminData.findOne({_id: userId.id});
         if(data){
-            await client.setEx(cacheKey, 600, JSON.stringify(data));
-            console.log('Cache miss for user:', userId.id);
+            // await client.setEx(cacheKey, 600, JSON.stringify(data));
+            // console.log('Cache miss for user:', userId.id);
             return res.json(data);
         }
         else
@@ -301,22 +301,11 @@ app.get(`/admin/posts`,authenticate , async(req,res)=>{
         return res.status(400).json({ error: 'User ID is required' });
     }
 
-    const cacheKey = `userPosts:${userId.id}`;
-    const cachedResponse = await client.get(cacheKey);
-
-    if(cachedResponse){
-        console.log('Cache hit for user:', userId.id);
-        return res.json(JSON.parse(cachedResponse));
-    }
-
     try {
         const posts = await BlogPost.find({userId: userId.id});
         if (!posts) {
             return res.status(404).json({ error: 'Posts not found!' });
         }
-        await client.setEx(cacheKey, 600, JSON.stringify(posts));
-        console.log(posts);
-        console.log('Cache miss for user:', userId.id);
         res.json(posts);
     } catch (error) {
         console.error("Error fetching the blog posts:", error);

@@ -2,8 +2,6 @@ import React from 'react'
 import { useState } from 'react';
 import ShowPassword from '../components/ShowPassword';
 import { useNavigate } from 'react-router-dom';
-// require('dotenv').config();
-// const port = process.env.REACT_APP_PORT;
 import { Button, buttonVariants } from '../components/Button';
 function SignIn() {
     const navigate = useNavigate();
@@ -33,12 +31,6 @@ const handleSubmit = async (e) =>{
         if(response.ok){
             const data = await response.json();
             navigate("/otp/verification", { state: { email: userData.email } });
-            // setUserData({
-            //     email: '',
-            //     password: '',
-            // });
-            // navigate('/admin/dashboard', { replace: true });
-            // navigate('/otp/verification', {replace: true});
         }
         else {
             const errorData = await response.json();
@@ -70,10 +62,6 @@ const handleChange = (e) => {
                 <label htmlFor="email">Email:</label>
                 <input type="email" id="email" name="email" value={userData.email} onChange={handleChange} autoComplete="email" required className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"/>
             </div>
-            {/* <div>
-                <label htmlFor="password">Password:</label>
-                <input type="password" id="password" name="password" value={userData.password} onChange={handleChange} autoComplete="password" required className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"/>
-            </div> */}
             <ShowPassword userData={userData} handleChange={handleChange}></ShowPassword>
             <Button type="submit" className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mt-4">Sign In</Button>
         </form>
