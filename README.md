@@ -1,17 +1,27 @@
-The Entrepreneurial Horizon
+# 📝 Entrepreneurial Horizon – Full-Stack Blog Website with Admin Panel
 
-Explore the limitless potential of innovation and entrepreneurship with The Entrepreneurial Horizon. This blog website is dedicated to sharing inspiring stories, actionable advice, and thought-provoking insights for aspiring entrepreneurs, seasoned professionals, and business enthusiasts.
+A **full-stack blog platform** built with **React, Node.js, Express.js, MongoDB**, and **AWS S3**, featuring a responsive UI and an integrated admin dashboard for seamless content management.  
 
-Key Features:
-Dynamic Blog Display: Read insightful blogs on a clean, user-friendly interface.
-Smooth Navigation: Seamless transitions between blog lists and detailed pages.
-Mobile Responsive: Designed for an optimized experience across all devices.
-Scroll-to-Top Button: Quickly navigate back to the top of the page for a better reading experience.
+This project was created to explore **end-to-end web development** with secure authentication, scalable storage, and efficient CRUD operations.
 
-Tech Stack:
-Frontend: React with Vite for a blazing-fast and modern development experience.
-Styling: Tailwind CSS for a responsive and customizable design.
-Routing: React Router for smooth and efficient navigation.
+---
 
-Whether you’re looking for inspiration, knowledge, or a community of like-minded innovators, The Entrepreneurial Horizon is your destination to dream big, learn, and grow.
-Do Checkout: ecellnita.in/blogs
+## 🚀 Features
+
+- **Full-Stack Application** — Built with React (frontend) and Node.js + Express.js (backend).
+- **Admin Dashboard** — Manage blog posts and media content with ease.
+- **Secure Authentication** — User login and signup with encrypted credentials.
+- **CRUD Functionality** — Create, read, update, and delete posts with efficient MongoDB queries.
+- **AWS S3 Integration** — Scalable and reliable storage for images and media.
+- **Responsive UI** — Built with Tailwind CSS for a modern, mobile-friendly experience.
+- **Seamless Frontend–Backend Integration** — Smooth communication via REST APIs.
+
+---
+
+## 🛠 Tech Stack
+
+**Frontend:** React, Tailwind CSS  
+**Backend:** Node.js, Express.js  
+**Database:** MongoDB  
+**Storage:** AWS S3  
+**Build Tool:** npm / Yarn  
